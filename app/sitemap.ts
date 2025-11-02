@@ -1,8 +1,10 @@
 import type { MetadataRoute } from 'next'
 
+export const dynamic = 'force-static'
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://yourdomain.com'
-  
+
   return [
     {
       url: baseUrl,
@@ -25,6 +27,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/facilities`,
+      lastModified: new Date(),
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/activities`,
+      lastModified: new Date(),
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/notices`,
       lastModified: new Date(),
       priority: 0.7,
@@ -45,7 +57,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     {
-      url: `${baseUrl}/staff`,
+      url: `${baseUrl}/faculty`,
+      lastModified: new Date(),
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/achievements`,
+      lastModified: new Date(),
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/rules`,
       lastModified: new Date(),
       priority: 0.6,
     },
