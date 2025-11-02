@@ -46,7 +46,8 @@ export default async function Event({ params }: Props) {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
-              })}`}
+              })}`
+            }
           </p>
           {data.location && <p className="mt-1">📍 {data.location}</p>}
         </div>
@@ -56,7 +57,7 @@ export default async function Event({ params }: Props) {
         />
       </section>
     )
-  } catch {
+  } catch (error) {
     return (
       <section className="wrap section">
         <h1 className="text-4xl font-bold text-gray-900">Event not found</h1>

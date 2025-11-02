@@ -50,7 +50,7 @@ export default async function Notice({ params }: Props) {
         />
       </section>
     )
-  } catch {
+  } catch (error) {
     return (
       <section className="wrap section">
         <h1 className="text-4xl font-bold text-gray-900">Notice not found</h1>
