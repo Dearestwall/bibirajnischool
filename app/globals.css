@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --brand: #0a6;
@@ -14,4 +16,8 @@
 
 .section {
   @apply py-14;
+}
+
+.prose :where(a) {
+  @apply text-emerald-700 underline;
 }
