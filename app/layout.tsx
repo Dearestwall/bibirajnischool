@@ -1,9 +1,9 @@
 import './globals.css'
-import Link from 'next/link'
+import Header from '@/components/Header'
 
 export const metadata = {
   title: 'Bibi Rajni School',
-  description: 'Official website of Bibi Rajni School',
+  description: 'Official website of Bibi Rajni School - Excellence in Education',
 }
 
 export default function RootLayout({
@@ -14,31 +14,51 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
-          <div className="wrap flex items-center justify-between h-16">
-            <Link href="/" className="font-bold text-lg">
-              Bibi Rajni School
-            </Link>
-            <nav className="hidden md:flex gap-6 text-sm">
-              <Link href="/about" className="hover:text-emerald-600">About</Link>
-              <Link href="/admissions" className="hover:text-emerald-600">Admissions</Link>
-              <Link href="/academics" className="hover:text-emerald-600">Academics</Link>
-              <Link href="/notices" className="hover:text-emerald-600">Notices</Link>
-              <Link href="/events" className="hover:text-emerald-600">Events</Link>
-              <Link href="/gallery" className="hover:text-emerald-600">Gallery</Link>
-              <Link href="/downloads" className="hover:text-emerald-600">Downloads</Link>
-              <Link href="/staff" className="hover:text-emerald-600">Staff</Link>
-              <Link href="/contact" className="hover:text-emerald-600">Contact</Link>
-            </nav>
-            <Link href="/admissions" className="btn text-sm">
-              Apply Now
-            </Link>
-          </div>
-        </header>
+        <Header />
         <main className="min-h-screen">{children}</main>
         <footer className="border-t bg-gray-50">
-          <div className="wrap py-8 text-sm text-gray-600 text-center">
-            © {new Date().getFullYear()} Bibi Rajni School. All rights reserved.
+          <div className="wrap py-12">
+            <div className="grid md:grid-cols-4 gap-8">
+              <div>
+                <div className="font-bold text-lg mb-3">Bibi Rajni School</div>
+                <p className="text-sm text-gray-600">
+                  Excellence in Education since 1990
+                </p>
+              </div>
+              <div>
+                <div className="font-semibold mb-3">Quick Links</div>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li><a href="/about" className="hover:text-emerald-600">About</a></li>
+                  <li><a href="/admissions" className="hover:text-emerald-600">Admissions</a></li>
+                  <li><a href="/academics" className="hover:text-emerald-600">Academics</a></li>
+                  <li><a href="/contact" className="hover:text-emerald-600">Contact</a></li>
+                </ul>
+              </div>
+              <div>
+                <div className="font-semibold mb-3">Contact</div>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li>+91 123 456 7890</li>
+                  <li>info@bibirajnischool.edu</li>
+                  <li>Punjab, India</li>
+                </ul>
+              </div>
+              <div>
+                <div className="font-semibold mb-3">Follow Us</div>
+                <div className="flex gap-3">
+                  <a href="#" className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-emerald-600 hover:text-white transition">
+                    <span className="sr-only">Facebook</span>
+                    f
+                  </a>
+                  <a href="#" className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-emerald-600 hover:text-white transition">
+                    <span className="sr-only">Instagram</span>
+                    i
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="mt-8 pt-8 border-t text-center text-sm text-gray-600">
+              © {new Date().getFullYear()} Bibi Rajni School. All rights reserved.
+            </div>
           </div>
         </footer>
       </body>
