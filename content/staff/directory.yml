@@ -1,0 +1,5 @@
+# content/staff/directory.yml
+members:
+  - name: Principal Name
+    role: Principal
+    email: principal@school.example

@@ -1,0 +1,86 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "pages"
+    label: "Pages"
+    files:
+      - name: "home"
+        label: "Home"
+        file: "content/pages/home.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Hero Image", name: "hero_image", widget: "image", required: false }
+          - { label: "CTA Text", name: "cta_text", widget: "string", required: false }
+          - { label: "CTA Link", name: "cta_link", widget: "string", required: false }
+          - { label: "Body", name: "body", widget: "markdown" }
+      - name: "about"
+        label: "About"
+        file: "content/pages/about.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "notices"
+    label: "Notices"
+    folder: "content/notices"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "File", name: "file", widget: "file", required: false }
+      - { label: "Body", name: "body", widget: "markdown", required: false }
+
+  - name: "events"
+    label: "Events"
+    folder: "content/events"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Start Date", name: "start", widget: "datetime" }
+      - { label: "End Date", name: "end", widget: "datetime", required: false }
+      - { label: "Location", name: "location", widget: "string", required: false }
+      - { label: "Cover Image", name: "cover", widget: "image", required: false }
+      - { label: "Description", name: "body", widget: "markdown" }
+
+  - name: "gallery"
+    label: "Gallery"
+    folder: "content/gallery"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Caption", name: "caption", widget: "string", required: false }
+
+  - name: "staff"
+    label: "Staff"
+    files:
+      - name: "directory"
+        label: "Directory"
+        file: "content/staff/directory.yml"
+        fields:
+          - label: "Members"
+            name: "members"
+            widget: "list"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Designation", name: "role", widget: "string" }
+              - { label: "Department", name: "dept", widget: "string", required: false }
+              - { label: "Photo", name: "photo", widget: "image", required: false }
+              - { label: "Email", name: "email", widget: "string", required: false }
+
+  - name: "downloads"
+    label: "Downloads"
+    folder: "content/downloads"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Label", name: "label", widget: "string" }
+      - { label: "File", name: "file", widget: "file" }
+      - { label: "Category", name: "category", widget: "string", required: false }
