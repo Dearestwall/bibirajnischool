@@ -2,7 +2,7 @@ import { readMarkdown, listCollection } from '@/lib/content'
 import { marked } from 'marked'
 
 type Props = {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export function generateStaticParams() {
@@ -12,9 +12,10 @@ export function generateStaticParams() {
   }))
 }
 
-export default function Notice({ params }: Props) {
-  const { data, content } = readMarkdown(`content/notices/${params.slug}.md`)
-  
+export default async function Notice({ params }: Props) {
+  const { slug } = await params
+  const { data, content } = readMarkdown(`content/notices/${slug}.md`)
+
   return (
     <section className="wrap section">
       <h1 className="text-4xl font-bold text-gray-900">{data.title}</h1>
