@@ -1,4 +1,3 @@
-// app/notices/[slug]/page.tsx
 import { readMarkdown } from '@/lib/content'
 import { marked } from 'marked'
 import fs from 'node:fs'
@@ -6,13 +5,14 @@ import path from 'node:path'
 
 export const dynamicParams = false
 
-export function generateStaticParams(): { slug: string }[] {
+export function generateStaticParams() {
   const dir = path.join(process.cwd(), 'content/notices')
   if (!fs.existsSync(dir)) return []
-  return fs
-    .readdirSync(dir)
-    .filter((f) => f.endsWith('.md'))
-    .map((f) => ({ slug: f.replace(/\.md$/, '') }))
+  
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md'))
+  return files.map((f) => ({
+    slug: f.replace(/\.md$/, ''),
+  }))
 }
 
 export default async function NoticePage({
@@ -22,6 +22,7 @@ export default async function NoticePage({
 }) {
   const { slug } = await params
   const { data, content } = readMarkdown(`content/notices/${slug}.md`)
+  
   return (
     <section className="wrap section">
       <h1 className="text-4xl font-bold text-gray-900">{data.title}</h1>
@@ -33,7 +34,12 @@ export default async function NoticePage({
         })}
       </p>
       {data.file && (
-        <a href={data.file} target="_blank" rel="noreferrer" className="btn mt-6 inline-flex">
+        <a
+          href={data.file}
+          target="_blank"
+          rel="noreferrer"
+          className="btn mt-6 inline-flex"
+        >
           Download Attachment
         </a>
       )}
