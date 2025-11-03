@@ -82,19 +82,20 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [stats, setStats] = useState<Record<number, number>>({})
   const [isLoading, setIsLoading] = useState(true)
+  const [notificationIndex, setNotificationIndex] = useState(0)
 
-  // Load all CMS content from content/home/ folder via API
+  // Load all CMS content
   useEffect(() => {
     const loadContent = async () => {
       try {
         const [hero, highlights, statsJson, programs, principal, notif, evt] = await Promise.all([
-          fetch('/api/content/hero').then(r => r.json()).catch(() => null),
-          fetch('/api/content/highlights').then(r => r.json()).catch(() => null),
-          fetch('/api/content/stats').then(r => r.json()).catch(() => null),
-          fetch('/api/content/programs').then(r => r.json()).catch(() => null),
-          fetch('/api/content/principal').then(r => r.json()).catch(() => null),
-          fetch('/api/content/notifications').then(r => r.json()).catch(() => null),
-          fetch('/api/content/events').then(r => r.json()).catch(() => null),
+          fetch('/hero.json').then(r => r.json()).catch(() => null),
+          fetch('/highlights.json').then(r => r.json()).catch(() => null),
+          fetch('/stats.json').then(r => r.json()).catch(() => null),
+          fetch('/programs.json').then(r => r.json()).catch(() => null),
+          fetch('/principal.json').then(r => r.json()).catch(() => null),
+          fetch('/notifications.json').then(r => r.json()).catch(() => null),
+          fetch('/events.json').then(r => r.json()).catch(() => null),
         ])
 
         setHeroData(hero || getDefaultHero())
@@ -124,6 +125,15 @@ export default function Home() {
 
     return () => clearInterval(timer)
   }, [heroData?.slides])
+
+  // Notification carousel
+  useEffect(() => {
+    if (notifications.length === 0) return
+    const timer = setInterval(() => {
+      setNotificationIndex((prev) => (prev + 1) % notifications.length)
+    }, 4000)
+    return () => clearInterval(timer)
+  }, [notifications])
 
   // Animate stats on scroll (fixed: removed 'once' property)
   useEffect(() => {
@@ -156,35 +166,33 @@ export default function Home() {
   }, [statsData])
 
   if (isLoading) {
-    return <div className="h-screen bg-gradient-to-br from-emerald-50 to-teal-50" />
+    return <div className="h-screen bg-white" />
   }
 
   return (
     <>
       {/* NOTIFICATION BANNER */}
-      {notifications.length > 0 && (
-        <div className="sticky top-0 z-40 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white overflow-hidden">
-          <div className="h-12 flex items-center">
-            <div className="wrap w-full flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3 min-w-0 flex-1">
-                <span className="text-xl animate-pulse">📢</span>
-                <div className="overflow-hidden flex-1">
-                  <div className="animate-scroll whitespace-nowrap">
-                    {notifications.map((notif) => (
-                      <span key={notif.id} className="inline-block px-4">
-                        {notif.icon} {notif.text}
-                      </span>
-                    ))}
-                  </div>
+      <div className="sticky top-0 z-40 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white overflow-hidden">
+        <div className="h-12 flex items-center">
+          <div className="wrap w-full flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <span className="text-xl animate-pulse">📢</span>
+              <div className="overflow-hidden flex-1">
+                <div className="animate-scroll whitespace-nowrap">
+                  {notifications.map((notif, idx) => (
+                    <span key={notif.id} className="inline-block px-4">
+                      {notif.icon} {notif.text}
+                    </span>
+                  ))}
                 </div>
               </div>
-              <a href="/contact" className="text-sm font-bold hover:underline whitespace-nowrap">
-                Learn More →
-              </a>
             </div>
+            <a href="/contact" className="text-sm font-bold hover:underline whitespace-nowrap">
+              Learn More →
+            </a>
           </div>
         </div>
-      )}
+      </div>
 
       {/* HERO SLIDER */}
       <section className="relative h-screen overflow-hidden bg-black">
@@ -308,7 +316,7 @@ export default function Home() {
           <div className="wrap">
             <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
               {principalData.image && (
-                <div className="flex justify-center order-2 md:order-1">
+                <div className="flex justify-center order-2 md:order-1 perspective">
                   <div className="relative w-full max-w-sm md:max-w-none">
                     {/* 3D Frame Effect */}
                     <div className="absolute -inset-4 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-2xl blur-xl opacity-20" />
@@ -352,11 +360,11 @@ export default function Home() {
             <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-12">
               🎯 Upcoming Events
             </h2>
-            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 overflow-x-auto pb-4">
               {events.map((event, idx) => (
                 <div
                   key={event.id}
-                  className="card hover:border-emerald-400 hover:bg-emerald-50 hover:shadow-xl transition-all duration-300"
+                  className="flex-shrink-0 card hover:border-emerald-400 hover:bg-emerald-50 hover:shadow-xl transition-all duration-300 min-w-full sm:min-w-auto"
                   style={{
                     animation: `fadeInUp 0.5s ease-out ${idx * 0.1}s both`,
                   }}
