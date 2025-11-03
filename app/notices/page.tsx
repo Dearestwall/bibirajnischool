@@ -1,17 +1,13 @@
+// app/notices/page.tsx
 import { listCollection, type Doc } from '@/lib/content'
 import Link from 'next/link'
 
-type NoticeData = {
-  title: string
-  date: string
-  file?: string
-}
+type NoticeData = { title: string; date: string; file?: string }
 
 export default function Notices() {
   const items: Doc<NoticeData>[] = listCollection<NoticeData>('content/notices')
   const sorted = [...items].sort(
-    (a: Doc<NoticeData>, b: Doc<NoticeData>) =>
-      new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
   )
 
   return (
@@ -21,7 +17,7 @@ export default function Notices() {
         <p className="mt-6 text-gray-600">No notices available.</p>
       ) : (
         <div className="mt-8 grid md:grid-cols-2 gap-6">
-          {sorted.map((n: Doc<NoticeData>) => (
+          {sorted.map((n) => (
             <div
               key={n.slug}
               className="p-6 rounded-xl border bg-white hover:shadow-lg transition"

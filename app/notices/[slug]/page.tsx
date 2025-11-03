@@ -26,7 +26,11 @@ export default async function NoticePage({
     <section className="wrap section">
       <h1 className="text-4xl font-bold text-gray-900">{data.title}</h1>
       <p className="text-sm text-gray-500 mt-3">
-        {new Date(data.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
+        {new Date(data.date).toLocaleDateString('en-IN', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })}
       </p>
       {data.file && (
         <a href={data.file} target="_blank" rel="noreferrer" className="btn mt-6 inline-flex">

@@ -4,7 +4,7 @@ import { marked } from 'marked'
 import fs from 'node:fs'
 import path from 'node:path'
 
-// Optional: tell Next that all dynamic params must come from generateStaticParams
+// Ensures only paths produced here are valid in static export
 export const dynamicParams = false
 
 export function generateStaticParams(): { slug: string }[] {
@@ -26,7 +26,11 @@ export default async function EventPage({
   return (
     <section className="wrap section">
       {data.cover && (
-        <img className="w-full h-64 md:h-96 object-cover rounded-2xl" src={data.cover} alt={data.title} />
+        <img
+          className="w-full h-64 md:h-96 object-cover rounded-2xl"
+          src={data.cover}
+          alt={data.title}
+        />
       )}
       <h1 className="text-4xl font-bold text-gray-900 mt-8">{data.title}</h1>
       <div className="mt-4 text-gray-600">

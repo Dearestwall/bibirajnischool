@@ -1,3 +1,4 @@
+// app/events/page.tsx
 import { listCollection, type Doc } from '@/lib/content'
 import Link from 'next/link'
 
