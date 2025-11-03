@@ -1,86 +1,109 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: Dearestwall/bibirajnischool
   branch: main
+  auth_type: github_app
+  app_id: YOUR_GITHUB_APP_ID
 
-media_folder: "public/images/uploads"
-public_folder: "/images/uploads"
+media_folder: 'public/images'
+public_folder: '/images'
+publish_mode: editorial_workflow
 
 collections:
-  - name: "pages"
-    label: "Pages"
+  - name: 'homepage'
+    label: 'Homepage'
     files:
-      - name: "home"
-        label: "Home"
-        file: "content/pages/home.md"
+      - name: 'hero'
+        label: 'Hero Section'
+        file: 'content/home/hero.json'
+        format: json
         fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Hero Image", name: "hero_image", widget: "image", required: false }
-          - { label: "CTA Text", name: "cta_text", widget: "string", required: false }
-          - { label: "CTA Link", name: "cta_link", widget: "string", required: false }
-          - { label: "Body", name: "body", widget: "markdown" }
-      - name: "about"
-        label: "About"
-        file: "content/pages/about.md"
-        fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Body", name: "body", widget: "markdown" }
-
-  - name: "notices"
-    label: "Notices"
-    folder: "content/notices"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
-      - { label: "File", name: "file", widget: "file", required: false }
-      - { label: "Body", name: "body", widget: "markdown", required: false }
-
-  - name: "events"
-    label: "Events"
-    folder: "content/events"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Start Date", name: "start", widget: "datetime" }
-      - { label: "End Date", name: "end", widget: "datetime", required: false }
-      - { label: "Location", name: "location", widget: "string", required: false }
-      - { label: "Cover Image", name: "cover", widget: "image", required: false }
-      - { label: "Description", name: "body", widget: "markdown" }
-
-  - name: "gallery"
-    label: "Gallery"
-    folder: "content/gallery"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Image", name: "image", widget: "image" }
-      - { label: "Caption", name: "caption", widget: "string", required: false }
-
-  - name: "staff"
-    label: "Staff"
-    files:
-      - name: "directory"
-        label: "Directory"
-        file: "content/staff/directory.yml"
-        fields:
-          - label: "Members"
-            name: "members"
-            widget: "list"
+          - { label: 'Main Title', name: 'title', widget: 'string', default: 'Welcome to Bibi Rajni School' }
+          - { label: 'Subtitle', name: 'subtitle', widget: 'string', default: 'Excellence in Education Since 1990' }
+          - { label: 'Description', name: 'description', widget: 'text', default: 'Where excellence meets compassion...' }
+          - { label: 'CTA Button 1 Text', name: 'cta1Text', widget: 'string', default: 'Apply Now' }
+          - { label: 'CTA Button 1 Link', name: 'cta1Link', widget: 'string', default: '/admissions' }
+          - { label: 'CTA Button 2 Text', name: 'cta2Text', widget: 'string', default: 'Explore More' }
+          - { label: 'CTA Button 2 Link', name: 'cta2Link', widget: 'string', default: '#programs' }
+          - label: 'Slider Images'
+            name: 'slides'
+            widget: 'list'
             fields:
-              - { label: "Name", name: "name", widget: "string" }
-              - { label: "Designation", name: "role", widget: "string" }
-              - { label: "Department", name: "dept", widget: "string", required: false }
-              - { label: "Photo", name: "photo", widget: "image", required: false }
-              - { label: "Email", name: "email", widget: "string", required: false }
+              - { label: 'Image', name: 'image', widget: 'image' }
+              - { label: 'Caption', name: 'caption', widget: 'string' }
 
-  - name: "downloads"
-    label: "Downloads"
-    folder: "content/downloads"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Label", name: "label", widget: "string" }
-      - { label: "File", name: "file", widget: "file" }
-      - { label: "Category", name: "category", widget: "string", required: false }
+      - name: 'highlights'
+        label: 'Highlight Cards'
+        file: 'content/home/highlights.json'
+        format: json
+        fields:
+          - label: 'Cards'
+            name: 'cards'
+            widget: 'list'
+            fields:
+              - { label: 'Icon', name: 'icon', widget: 'string' }
+              - { label: 'Title', name: 'title', widget: 'string' }
+              - { label: 'Description', name: 'description', widget: 'text' }
+              - { label: 'Color Gradient', name: 'color', widget: 'string', default: 'from-blue-500 to-blue-600' }
+
+      - name: 'principal'
+        label: 'Principal Section'
+        file: 'content/home/principal.json'
+        format: json
+        fields:
+          - { label: 'Title', name: 'title', widget: 'string' }
+          - { label: 'Message', name: 'message', widget: 'text' }
+          - { label: 'Name', name: 'name', widget: 'string' }
+          - { label: 'Position', name: 'position', widget: 'string' }
+          - { label: 'Image', name: 'image', widget: 'image', required: false }
+
+      - name: 'stats'
+        label: 'Statistics'
+        file: 'content/home/stats.json'
+        format: json
+        fields:
+          - label: 'Stats'
+            name: 'items'
+            widget: 'list'
+            fields:
+              - { label: 'Value', name: 'value', widget: 'number' }
+              - { label: 'Suffix', name: 'suffix', widget: 'string', default: '+' }
+              - { label: 'Label', name: 'label', widget: 'string' }
+
+      - name: 'programs'
+        label: 'Programs Section'
+        file: 'content/home/programs.json'
+        format: json
+        fields:
+          - { label: 'Section Title', name: 'title', widget: 'string' }
+          - label: 'Programs'
+            name: 'items'
+            widget: 'list'
+            fields:
+              - { label: 'Icon', name: 'icon', widget: 'string' }
+              - { label: 'Title', name: 'title', widget: 'string' }
+              - { label: 'Description', name: 'desc', widget: 'text' }
+
+  - name: 'pages'
+    label: 'Pages'
+    files:
+      - name: 'about'
+        label: 'About'
+        file: 'content/pages/about.md'
+        fields:
+          - { label: 'Title', name: 'title', widget: 'string' }
+          - { label: 'Content', name: 'body', widget: 'markdown' }
+
+      - name: 'admissions'
+        label: 'Admissions'
+        file: 'content/pages/admissions.md'
+        fields:
+          - { label: 'Title', name: 'title', widget: 'string' }
+          - { label: 'Content', name: 'body', widget: 'markdown' }
+
+      - name: 'contact'
+        label: 'Contact'
+        file: 'content/pages/contact.md'
+        fields:
+          - { label: 'Title', name: 'title', widget: 'string' }
+          - { label: 'Content', name: 'body', widget: 'markdown' }

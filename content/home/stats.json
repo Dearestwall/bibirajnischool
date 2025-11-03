@@ -1,0 +1,8 @@
+{
+  "items": [
+    { "value": 34, "suffix": "+", "label": "Years" },
+    { "value": 2000, "suffix": "+", "label": "Alumni" },
+    { "value": 98, "suffix": "%", "label": "Pass Rate" },
+    { "value": 500, "suffix": "+", "label": "Students" }
+  ]
+}

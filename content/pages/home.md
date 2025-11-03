@@ -1,8 +1,12 @@
-<!-- content/pages/home.md -->
 ---
 title: Welcome to Bibi Rajni School
+description: Excellence in Education since 1990
 hero_image: /images/hero.jpg
-cta_text: Apply Now
-cta_link: /admissions
+cta_text: Explore More
+cta_link: /academics
+meta_keywords: school, education, bibi rajni, punjab
 ---
-Our mission is to nurture confident, compassionate learners prepared for the future.
+
+# Welcome
+
+Our mission is to nurture confident, compassionate learners.
