@@ -1,0 +1,8 @@
+﻿{
+  "items": [
+    { "id": "1", "title": "Annual Sports Day", "date": "Nov 15, 2025", "icon": "🏆" },
+    { "id": "2", "title": "Science Exhibition", "date": "Nov 22, 2025", "icon": "🔬" },
+    { "id": "3", "title": "Cultural Fest", "date": "Dec 5, 2025", "icon": "🎭" },
+    { "id": "4", "title": "Founder's Day", "date": "Dec 20, 2025", "icon": "🎉" }
+  ]
+}

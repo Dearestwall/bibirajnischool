@@ -1,0 +1,7 @@
+﻿{
+  "items": [
+    { "id": "1", "text": "Admissions Open for 2026-27", "icon": "📢" },
+    { "id": "2", "text": "Annual Sports Day - Nov 15", "icon": "🏆" },
+    { "id": "3", "text": "Parent-Teacher Meeting - Nov 20", "icon": "👥" }
+  ]
+}
