@@ -3,7 +3,6 @@ backend:
   branch: main
   identity_url: 'https://bibirajnischool.netlify.app/identity'
   gitgateway_url: 'https://api.netlify.com/auth/github'
-  
   commit_messages:
     create: 'Create {{collection}} "{{slug}}"'
     update: 'Update {{collection}} "{{slug}}"'
@@ -14,7 +13,6 @@ backend:
 media_folder: 'public/images'
 public_folder: '/images'
 publish_mode: editorial_workflow
-logo_url: 'https://via.placeholder.com/80x80?text=BR+School'
 site_url: 'https://bibirajnischool.vercel.app'
 display_url: 'https://bibirajnischool.vercel.app'
 show_preview_links: true
@@ -31,21 +29,45 @@ collections:
         file: 'content/home/hero.json'
         description: 'Hero banner with slider'
         fields:
-          - { label: 'Title', name: 'title', widget: 'string', default: 'Welcome to Bibi Rajni School' }
-          - { label: 'Subtitle', name: 'subtitle', widget: 'string', default: 'Excellence in Education Since 1990' }
-          - { label: 'Description', name: 'description', widget: 'text' }
-          - { label: 'CTA 1 Text', name: 'cta1Text', widget: 'string', default: 'Apply Now' }
-          - { label: 'CTA 1 Link', name: 'cta1Link', widget: 'string', default: '/admissions' }
-          - { label: 'CTA 2 Text', name: 'cta2Text', widget: 'string', default: 'Explore' }
-          - { label: 'CTA 2 Link', name: 'cta2Link', widget: 'string', default: '#programs' }
+          - label: 'Title'
+            name: 'title'
+            widget: 'string'
+            default: 'Welcome to Bibi Rajni School'
+          - label: 'Subtitle'
+            name: 'subtitle'
+            widget: 'string'
+            default: 'Excellence in Education Since 1990'
+          - label: 'Description'
+            name: 'description'
+            widget: 'text'
+          - label: 'CTA 1 Text'
+            name: 'cta1Text'
+            widget: 'string'
+            default: 'Apply Now'
+          - label: 'CTA 1 Link'
+            name: 'cta1Link'
+            widget: 'string'
+            default: '/admissions'
+          - label: 'CTA 2 Text'
+            name: 'cta2Text'
+            widget: 'string'
+            default: 'Explore'
+          - label: 'CTA 2 Link'
+            name: 'cta2Link'
+            widget: 'string'
+            default: '#programs'
           - label: 'Slides'
             name: 'slides'
             widget: 'list'
             allow_add: true
             collapsed: true
             fields:
-              - { label: 'Image', name: 'image', widget: 'image' }
-              - { label: 'Caption', name: 'caption', widget: 'string' }
+              - label: 'Image'
+                name: 'image'
+                widget: 'image'
+              - label: 'Caption'
+                name: 'caption'
+                widget: 'string'
 
       - name: 'highlights'
         label: 'Highlights'
@@ -58,29 +80,51 @@ collections:
             allow_add: true
             collapsed: true
             fields:
-              - { label: 'Icon (Emoji)', name: 'icon', widget: 'string' }
-              - { label: 'Title', name: 'title', widget: 'string' }
-              - { label: 'Description', name: 'description', widget: 'text' }
+              - label: 'Icon (Emoji)'
+                name: 'icon'
+                widget: 'string'
+              - label: 'Title'
+                name: 'title'
+                widget: 'string'
+              - label: 'Description'
+                name: 'description'
+                widget: 'text'
               - label: 'Color Gradient'
                 name: 'color'
                 widget: 'select'
                 options:
-                  - { label: '🔵 Blue', value: 'from-blue-500 to-blue-600' }
-                  - { label: '🟣 Purple', value: 'from-purple-500 to-purple-600' }
-                  - { label: '🌸 Pink', value: 'from-pink-500 to-pink-600' }
-                  - { label: '🟢 Green', value: 'from-green-500 to-green-600' }
-                  - { label: '🟠 Orange', value: 'from-orange-500 to-orange-600' }
+                  - label: '🔵 Blue'
+                    value: 'from-blue-500 to-blue-600'
+                  - label: '🟣 Purple'
+                    value: 'from-purple-500 to-purple-600'
+                  - label: '🌸 Pink'
+                    value: 'from-pink-500 to-pink-600'
+                  - label: '🟢 Green'
+                    value: 'from-green-500 to-green-600'
+                  - label: '🟠 Orange'
+                    value: 'from-orange-500 to-orange-600'
 
       - name: 'principal'
-        label: 'Principal\'s Desk'
+        label: "Principal's Desk"
         file: 'content/home/principal.json'
         description: 'Principal message section'
         fields:
-          - { label: 'Section Title', name: 'title', widget: 'string' }
-          - { label: 'Message', name: 'message', widget: 'markdown' }
-          - { label: 'Principal Name', name: 'name', widget: 'string' }
-          - { label: 'Position', name: 'position', widget: 'string' }
-          - { label: 'Photo', name: 'image', widget: 'image', required: false }
+          - label: 'Section Title'
+            name: 'title'
+            widget: 'string'
+          - label: 'Message'
+            name: 'message'
+            widget: 'markdown'
+          - label: 'Principal Name'
+            name: 'name'
+            widget: 'string'
+          - label: 'Position'
+            name: 'position'
+            widget: 'string'
+          - label: 'Photo'
+            name: 'image'
+            widget: 'image'
+            required: false
 
       - name: 'stats'
         label: 'Statistics'
@@ -93,25 +137,41 @@ collections:
             allow_add: true
             collapsed: true
             fields:
-              - { label: 'Number', name: 'value', widget: 'number', valueType: 'int' }
-              - { label: 'Suffix', name: 'suffix', widget: 'string', default: '+' }
-              - { label: 'Label', name: 'label', widget: 'string' }
+              - label: 'Number'
+                name: 'value'
+                widget: 'number'
+                valueType: 'int'
+              - label: 'Suffix'
+                name: 'suffix'
+                widget: 'string'
+                default: '+'
+              - label: 'Label'
+                name: 'label'
+                widget: 'string'
 
       - name: 'programs'
         label: 'Programs'
         file: 'content/home/programs.json'
         description: 'Why choose us section'
         fields:
-          - { label: 'Section Title', name: 'title', widget: 'string' }
+          - label: 'Section Title'
+            name: 'title'
+            widget: 'string'
           - label: 'Programs'
             name: 'items'
             widget: 'list'
             allow_add: true
             collapsed: true
             fields:
-              - { label: 'Icon (Emoji)', name: 'icon', widget: 'string' }
-              - { label: 'Title', name: 'title', widget: 'string' }
-              - { label: 'Description', name: 'desc', widget: 'text' }
+              - label: 'Icon (Emoji)'
+                name: 'icon'
+                widget: 'string'
+              - label: 'Title'
+                name: 'title'
+                widget: 'string'
+              - label: 'Description'
+                name: 'desc'
+                widget: 'text'
 
       - name: 'notifications'
         label: 'Notifications'
@@ -124,9 +184,15 @@ collections:
             allow_add: true
             collapsed: true
             fields:
-              - { label: 'ID', name: 'id', widget: 'string' }
-              - { label: 'Text', name: 'text', widget: 'string' }
-              - { label: 'Icon (Emoji)', name: 'icon', widget: 'string' }
+              - label: 'ID'
+                name: 'id'
+                widget: 'string'
+              - label: 'Text'
+                name: 'text'
+                widget: 'string'
+              - label: 'Icon (Emoji)'
+                name: 'icon'
+                widget: 'string'
 
       - name: 'events'
         label: 'Events'
@@ -139,27 +205,46 @@ collections:
             allow_add: true
             collapsed: true
             fields:
-              - { label: 'ID', name: 'id', widget: 'string' }
-              - { label: 'Title', name: 'title', widget: 'string' }
-              - { label: 'Date', name: 'date', widget: 'string', pattern: ['\\d{4}-\\d{2}-\\d{2}', 'YYYY-MM-DD'] }
-              - { label: 'Icon (Emoji)', name: 'icon', widget: 'string' }
+              - label: 'ID'
+                name: 'id'
+                widget: 'string'
+              - label: 'Title'
+                name: 'title'
+                widget: 'string'
+              - label: 'Date'
+                name: 'date'
+                widget: 'string'
+              - label: 'Icon (Emoji)'
+                name: 'icon'
+                widget: 'string'
 
       - name: 'testimonials'
         label: 'Testimonials'
         file: 'content/home/testimonials.json'
         description: 'Parent testimonials'
         fields:
-          - { label: 'Section Title', name: 'title', widget: 'string' }
+          - label: 'Section Title'
+            name: 'title'
+            widget: 'string'
           - label: 'Testimonials'
             name: 'items'
             widget: 'list'
             allow_add: true
             collapsed: true
             fields:
-              - { label: 'Name', name: 'name', widget: 'string' }
-              - { label: 'Role', name: 'role', widget: 'string' }
-              - { label: 'Message', name: 'message', widget: 'markdown' }
-              - { label: 'Photo', name: 'image', widget: 'image', required: false }
+              - label: 'Name'
+                name: 'name'
+                widget: 'string'
+              - label: 'Role'
+                name: 'role'
+                widget: 'string'
+              - label: 'Message'
+                name: 'message'
+                widget: 'markdown'
+              - label: 'Photo'
+                name: 'image'
+                widget: 'image'
+                required: false
 
   # ABOUT PAGE
   - name: 'about'
@@ -169,25 +254,43 @@ collections:
         label: 'About Content'
         file: 'content/pages/about.json'
         fields:
-          - { label: 'Page Title', name: 'title', widget: 'string' }
-          - { label: 'Subtitle', name: 'subtitle', widget: 'string' }
-          - { label: 'Story', name: 'story', widget: 'markdown' }
+          - label: 'Page Title'
+            name: 'title'
+            widget: 'string'
+          - label: 'Subtitle'
+            name: 'subtitle'
+            widget: 'string'
+          - label: 'Story'
+            name: 'story'
+            widget: 'markdown'
           - label: 'Milestones'
             name: 'milestones'
             widget: 'list'
             allow_add: true
             fields:
-              - { label: 'Year', name: 'year', widget: 'string' }
-              - { label: 'Title', name: 'title', widget: 'string' }
-              - { label: 'Description', name: 'desc', widget: 'text' }
+              - label: 'Year'
+                name: 'year'
+                widget: 'string'
+              - label: 'Title'
+                name: 'title'
+                widget: 'string'
+              - label: 'Description'
+                name: 'desc'
+                widget: 'text'
           - label: 'Values'
             name: 'values'
             widget: 'list'
             allow_add: true
             fields:
-              - { label: 'Icon', name: 'icon', widget: 'string' }
-              - { label: 'Title', name: 'title', widget: 'string' }
-              - { label: 'Description', name: 'desc', widget: 'text' }
+              - label: 'Icon'
+                name: 'icon'
+                widget: 'string'
+              - label: 'Title'
+                name: 'title'
+                widget: 'string'
+              - label: 'Description'
+                name: 'desc'
+                widget: 'text'
 
   # ADMISSIONS PAGE
   - name: 'admissions'
@@ -197,23 +300,40 @@ collections:
         label: 'Admissions Content'
         file: 'content/pages/admissions.json'
         fields:
-          - { label: 'Page Title', name: 'title', widget: 'string' }
-          - { label: 'Subtitle', name: 'subtitle', widget: 'string' }
-          - { label: 'Content', name: 'content', widget: 'markdown' }
+          - label: 'Page Title'
+            name: 'title'
+            widget: 'string'
+          - label: 'Subtitle'
+            name: 'subtitle'
+            widget: 'string'
+          - label: 'Content'
+            name: 'content'
+            widget: 'markdown'
           - label: 'Process Steps'
             name: 'process'
             widget: 'list'
             allow_add: true
             fields:
-              - { label: 'Step Number', name: 'step', widget: 'string' }
-              - { label: 'Title', name: 'title', widget: 'string' }
-              - { label: 'Description', name: 'desc', widget: 'text' }
-              - { label: 'Icon', name: 'icon', widget: 'string' }
+              - label: 'Step Number'
+                name: 'step'
+                widget: 'string'
+              - label: 'Title'
+                name: 'title'
+                widget: 'string'
+              - label: 'Description'
+                name: 'desc'
+                widget: 'text'
+              - label: 'Icon'
+                name: 'icon'
+                widget: 'string'
           - label: 'Documents Required'
             name: 'documents'
             widget: 'list'
             allow_add: true
-            field: { label: 'Document', name: 'name', widget: 'string' }
+            field:
+              label: 'Document'
+              name: 'name'
+              widget: 'string'
 
   # CONTACT PAGE
   - name: 'contact'
@@ -223,9 +343,15 @@ collections:
         label: 'Contact Content'
         file: 'content/pages/contact.json'
         fields:
-          - { label: 'Page Title', name: 'title', widget: 'string' }
-          - { label: 'Subtitle', name: 'subtitle', widget: 'string' }
-          - { label: 'Message', name: 'message', widget: 'markdown' }
+          - label: 'Page Title'
+            name: 'title'
+            widget: 'string'
+          - label: 'Subtitle'
+            name: 'subtitle'
+            widget: 'string'
+          - label: 'Message'
+            name: 'message'
+            widget: 'markdown'
 
   # GALLERY
   - name: 'gallery'
@@ -234,18 +360,35 @@ collections:
     create: true
     slug: '{{slug}}'
     fields:
-      - { label: 'Title', name: 'title', widget: 'string' }
+      - label: 'Title'
+        name: 'title'
+        widget: 'string'
       - label: 'Category'
         name: 'category'
         widget: 'select'
-        options: ['events', 'campus', 'activities', 'sports']
-      - { label: 'Date', name: 'date', widget: 'datetime' }
-      - { label: 'Description', name: 'description', widget: 'text' }
+        options:
+          - label: 'Events'
+            value: 'events'
+          - label: 'Campus'
+            value: 'campus'
+          - label: 'Activities'
+            value: 'activities'
+          - label: 'Sports'
+            value: 'sports'
+      - label: 'Date'
+        name: 'date'
+        widget: 'datetime'
+      - label: 'Description'
+        name: 'description'
+        widget: 'text'
       - label: 'Images'
         name: 'images'
         widget: 'list'
         allow_add: true
-        field: { label: 'Image', name: 'image', widget: 'image' }
+        field:
+          label: 'Image'
+          name: 'image'
+          widget: 'image'
 
   # NEWS & NOTICES
   - name: 'news'
@@ -254,12 +397,32 @@ collections:
     create: true
     slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
     fields:
-      - { label: 'Title', name: 'title', widget: 'string' }
-      - { label: 'Publish Date', name: 'date', widget: 'datetime' }
+      - label: 'Title'
+        name: 'title'
+        widget: 'string'
+      - label: 'Publish Date'
+        name: 'date'
+        widget: 'datetime'
       - label: 'Category'
         name: 'category'
         widget: 'select'
-        options: ['news', 'notice', 'event', 'achievement']
-      - { label: 'Content', name: 'body', widget: 'markdown' }
-      - { label: 'Featured Image', name: 'image', widget: 'image', required: false }
-      - { label: 'Author', name: 'author', widget: 'string', required: false }
+        options:
+          - label: 'News'
+            value: 'news'
+          - label: 'Notice'
+            value: 'notice'
+          - label: 'Event'
+            value: 'event'
+          - label: 'Achievement'
+            value: 'achievement'
+      - label: 'Content'
+        name: 'body'
+        widget: 'markdown'
+      - label: 'Featured Image'
+        name: 'image'
+        widget: 'image'
+        required: false
+      - label: 'Author'
+        name: 'author'
+        widget: 'string'
+        required: false

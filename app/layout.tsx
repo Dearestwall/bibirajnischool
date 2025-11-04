@@ -35,7 +35,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased bg-white">
+      <body className="antialiased bg-white" suppressHydrationWarning>
         <Header />
         <main className="min-h-screen">{children}</main>
         <Translator />

@@ -5,6 +5,12 @@ import { useState, useEffect } from 'react'
 export default function Translator() {
   const [isOpen, setIsOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  // Only render after mount to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Show/hide back-to-top button
   useEffect(() => {
@@ -16,18 +22,15 @@ export default function Translator() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Scroll to top
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+  if (!mounted) return null
 
   return (
     <>
       {/* Back to Top Button - LEFT SIDE */}
       {isVisible && (
         <button
-          onClick={scrollToTop}
-          className="fixed left-6 bottom-6 z-40 w-12 h-12 rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-lg hover:shadow-2xl transition-all flex items-center justify-center text-xl hover:scale-110 animate-fade-in-up"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed left-6 bottom-6 z-40 w-12 h-12 rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white shadow-lg hover:shadow-2xl transition-all flex items-center justify-center text-xl hover:scale-110"
           title="Back to top"
         >
           ⬆️
@@ -47,7 +50,7 @@ export default function Translator() {
 
         {/* Panel */}
         {isOpen && (
-          <div className="absolute bottom-24 right-0 bg-white rounded-2xl shadow-2xl w-80 border border-gray-200 overflow-hidden animate-fade-in-up">
+          <div className="absolute bottom-24 right-0 bg-white rounded-2xl shadow-2xl w-80 border border-gray-200 overflow-hidden">
             {/* Header */}
             <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-4 flex justify-between items-center">
               <h3 className="font-bold text-lg">🌍 Translate</h3>
