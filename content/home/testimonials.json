@@ -1,8 +1,0 @@
-﻿{
-  "title": "What Parents Say",
-  "items": [
-    { "name": "Mr. Jatin Kumar", "role": "Parent", "message": "Outstanding school with excellent faculty and modern facilities. Our child has grown tremendously.", "image": "/images/testimonials/parent1.jpg" },
-    { "name": "Mrs. Priya Singh", "role": "Parent", "message": "The holistic approach to education here is commendable. Highly recommend Bibi Rajni School.", "image": "/images/testimonials/parent2.jpg" },
-    { "name": "Mr. Harman Gill", "role": "Parent", "message": "Best decision to enroll my child here. The teachers care and students flourish.", "image": "/images/testimonials/parent3.jpg" }
-  ]
-}

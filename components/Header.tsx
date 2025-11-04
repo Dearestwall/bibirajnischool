@@ -78,31 +78,32 @@ export default function Header() {
   return (
     <>
       {/* CONTINUOUS SCROLLING ANNOUNCEMENTS */}
-      <div className="bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 text-white overflow-hidden shadow-lg py-2">
-        <div className="flex items-center gap-3">
-          <span className="text-lg font-bold animate-bounce whitespace-nowrap pl-4">📢</span>
-          <div className="overflow-hidden flex-1">
-            <motion.div
-              animate={{ x: ['0%', '-100%'] }}
-              transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-              className="flex gap-8 whitespace-nowrap"
-            >
-              {/* First set */}
-              {announcements.map((item) => (
-                <span key={`${item.id}-1`} className="text-sm font-medium">
-                  {item.icon} {item.text}
-                </span>
-              ))}
-              {/* Duplicate for seamless loop */}
-              {announcements.map((item) => (
-                <span key={`${item.id}-2`} className="text-sm font-medium">
-                  {item.icon} {item.text}
-                </span>
-              ))}
-            </motion.div>
-          </div>
-        </div>
-      </div>
+<div className="bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 text-white overflow-hidden shadow-lg py-2">
+  <div className="flex items-center gap-3">
+    <span className="text-lg font-bold animate-bounce whitespace-nowrap pl-4">📢</span>
+    <div className="overflow-hidden flex-1">
+      <motion.div
+        animate={{ x: ['0%', '-100%'] }}
+        transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+        className="flex gap-8 whitespace-nowrap"
+      >
+        {/* First set - use unique keys with timestamp */}
+        {announcements.map((item, idx) => (
+          <span key={`announce-1-${item.id}-${idx}`} className="text-sm font-medium">
+            {item.icon} {item.text}
+          </span>
+        ))}
+        {/* Duplicate for seamless loop - use different suffix */}
+        {announcements.map((item, idx) => (
+          <span key={`announce-2-${item.id}-${idx}`} className="text-sm font-medium">
+            {item.icon} {item.text}
+          </span>
+        ))}
+      </motion.div>
+    </div>
+  </div>
+</div>
+
 
       {/* MAIN HEADER */}
       <header

@@ -1,0 +1,34 @@
+{
+  "items": [
+    {
+      "id": "contact",
+      "title": "Stay Connected",
+      "subtitle": "Multiple Ways to Reach Us",
+      "icon": "📞",
+      "content": "Get in touch with us through multiple channels. We are always available to answer your queries.",
+      "image": "https://via.placeholder.com/600x400?text=Contact",
+      "link": "/contact",
+      "linkText": "Contact Us"
+    },
+    {
+      "id": "facilities",
+      "title": "World-Class Facilities",
+      "subtitle": "State-of-the-art Infrastructure",
+      "icon": "🏢",
+      "content": "Our campus is equipped with modern facilities including smart classrooms, labs, and sports grounds.",
+      "image": "https://via.placeholder.com/600x400?text=Facilities",
+      "link": "/facilities",
+      "linkText": "Explore Facilities"
+    },
+    {
+      "id": "rules",
+      "title": "School Rules & Regulations",
+      "subtitle": "Discipline & Conduct",
+      "icon": "📖",
+      "content": "Guidelines and rules designed to maintain a healthy learning environment for all students.",
+      "image": "https://via.placeholder.com/600x400?text=Rules",
+      "link": "/rules",
+      "linkText": "View Rules"
+    }
+  ]
+}

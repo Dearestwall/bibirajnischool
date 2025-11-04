@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 
+// Interfaces
 interface HeroSlide {
   image: string
   caption: string
@@ -85,7 +86,26 @@ interface Testimonials {
   items: TestimonialItem[]
 }
 
+interface Section {
+  id: string
+  title: string
+  subtitle: string
+  icon: string
+  content: string
+  image?: string
+  link: string
+  linkText: string
+}
+
+interface GalleryItem {
+  id: string
+  title: string
+  category: string
+  image: string
+}
+
 export default function Home() {
+  // State
   const [heroData, setHeroData] = useState<HeroData | null>(null)
   const [highlightsData, setHighlightsData] = useState<Highlights | null>(null)
   const [statsData, setStatsData] = useState<Stats | null>(null)
@@ -94,24 +114,38 @@ export default function Home() {
   const [testimonials, setTestimonials] = useState<Testimonials | null>(null)
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [events, setEvents] = useState<Event[]>([])
-  
+  const [homeSections, setHomeSections] = useState<Section[]>([])
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([])
+
   const [currentSlide, setCurrentSlide] = useState(0)
   const [stats, setStats] = useState<Record<number, number>>({})
   const [statsAnimated, setStatsAnimated] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [currentTestimonial, setCurrentTestimonial] = useState(0)
-  
+
   const statsRef = useRef<HTMLDivElement>(null)
+  const galleryScrollRef = useRef<HTMLDivElement>(null)
 
   // Load all CMS content
   useEffect(() => {
-  setMounted(true)
-  loadContent()
-}, [])
+    setMounted(true)
+    loadContent()
+  }, [])
 
   const loadContent = async () => {
     try {
-      const [hero, highlights, statsJson, programs, principal, notif, evt, testimonials] = await Promise.all([
+      const [
+        hero,
+        highlights,
+        statsJson,
+        programs,
+        principal,
+        notif,
+        evt,
+        testimonials,
+        sections,
+        gallery,
+      ] = await Promise.all([
         fetch('/content/home/hero.json').then(r => r.ok ? r.json() : null),
         fetch('/content/home/highlights.json').then(r => r.ok ? r.json() : null),
         fetch('/content/home/stats.json').then(r => r.ok ? r.json() : null),
@@ -120,6 +154,8 @@ export default function Home() {
         fetch('/content/home/notifications.json').then(r => r.ok ? r.json() : null),
         fetch('/content/home/events.json').then(r => r.ok ? r.json() : null),
         fetch('/content/home/testimonials.json').then(r => r.ok ? r.json() : null),
+        fetch('/content/home/sections.json').then(r => r.ok ? r.json() : null),
+        fetch('/content/gallery.json').then(r => r.ok ? r.json() : null),
       ])
 
       setHeroData(hero || getDefaultHero())
@@ -128,6 +164,8 @@ export default function Home() {
       setProgramsData(programs || getDefaultPrograms())
       setPrincipalData(principal || getDefaultPrincipal())
       setTestimonials(testimonials || getDefaultTestimonials())
+      setHomeSections(sections?.items || getDefaultSections())
+      setGalleryItems(gallery?.items || getDefaultGallery())
       setNotifications(notif?.items || [])
       setEvents(evt?.items || [])
     } catch (error) {
@@ -186,8 +224,6 @@ export default function Home() {
 
   return (
     <>
-     
-
       {/* HERO SLIDER */}
       <section className="relative h-screen overflow-hidden bg-black">
         <AnimatePresence initial={false}>
@@ -356,9 +392,103 @@ export default function Home() {
         </section>
       )}
 
+      {/* HOME SECTIONS (CONTACT, FACILITIES, RULES, ETC) */}
+      {homeSections.length > 0 && (
+        <>
+          {homeSections.map((section, idx) => (
+            <section key={section.id} className={`section ${idx % 2 === 0 ? 'bg-white' : 'bg-gradient-to-br from-gray-50 to-gray-100'}`}>
+              <div className="wrap">
+                <div className={`grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center ${idx % 2 === 1 ? 'md:grid-cols-2-reverse' : ''}`}>
+                  {section.image && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      className="flex justify-center"
+                    >
+                      <img
+                        src={section.image}
+                        alt={section.title}
+                        className="rounded-2xl shadow-2xl w-full h-auto object-cover aspect-video"
+                        loading="lazy"
+                      />
+                    </motion.div>
+                  )}
+                  <motion.div
+                    initial={{ opacity: 0, x: idx % 2 === 0 ? 30 : -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    className="space-y-4 sm:space-y-6"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-4xl sm:text-5xl">{section.icon}</span>
+                      <h2 className="text-2xl sm:text-4xl font-bold text-gray-900">{section.title}</h2>
+                    </div>
+                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed">{section.subtitle}</p>
+                    <p className="text-gray-700 text-sm sm:text-base">{section.content}</p>
+                    <motion.a
+                      href={section.link}
+                      className="inline-block px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-colors"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {section.linkText} →
+                    </motion.a>
+                  </motion.div>
+                </div>
+              </div>
+            </section>
+          ))}
+        </>
+      )}
+
+      {/* HORIZONTAL SCROLLING GALLERY */}
+      {galleryItems.length > 0 && (
+        <section className="section bg-white">
+          <div className="wrap">
+            <h2 className="text-2xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-900">🖼️ Gallery</h2>
+            <div
+              ref={galleryScrollRef}
+              className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 scroll-smooth"
+              style={{ scrollBehavior: 'smooth' }}
+            >
+              {galleryItems.map((item, idx) => (
+                <motion.div
+                  key={item.id}
+                  className="flex-shrink-0 w-72 sm:w-80 h-48 sm:h-56 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all cursor-pointer group"
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                    <div className="text-white">
+                      <p className="font-bold text-lg">{item.title}</p>
+                      <p className="text-sm text-gray-300">{item.category}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <Link href="/gallery" className="btn">
+                View All Gallery →
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* EVENTS */}
       {events.length > 0 && (
-        <section className="section bg-white">
+        <section className="section bg-gradient-to-br from-gray-50 to-gray-100">
           <div className="wrap">
             <h2 className="text-2xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-900">🎯 Upcoming Events</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
@@ -457,6 +587,7 @@ export default function Home() {
                         src={testimonials.items[currentTestimonial].image}
                         alt={testimonials.items[currentTestimonial].name}
                         className="w-16 sm:w-20 h-16 sm:h-20 rounded-full object-cover border-4 border-emerald-600"
+                        loading="lazy"
                       />
                     )}
                   </div>
@@ -466,7 +597,6 @@ export default function Home() {
                 </motion.div>
               </AnimatePresence>
 
-              {/* Testimonial Navigation */}
               <div className="flex justify-center gap-2 mt-6">
                 {testimonials.items.map((_, idx) => (
                   <button
@@ -483,7 +613,7 @@ export default function Home() {
         </section>
       )}
 
-      {/* MAP & CONTACT */}
+      {/* CONTACT */}
       <section className="section bg-white">
         <div className="wrap">
           <h2 className="text-2xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-900">Get in Touch</h2>
@@ -540,11 +670,11 @@ export default function Home() {
               className="space-y-4 sm:space-y-6 p-6 sm:p-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20"
             >
               <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
-                <input type="text" name="name" placeholder="Your Name" required className="bg-white/20 border-white/30 text-white placeholder-white/50 text-sm sm:text-base" />
-                <input type="email" name="email" placeholder="Your Email" required className="bg-white/20 border-white/30 text-white placeholder-white/50 text-sm sm:text-base" />
+                <input type="text" name="name" placeholder="Your Name" required className="bg-white/20 border border-white/30 text-white placeholder-white/50 rounded-lg px-4 py-2 text-sm sm:text-base" />
+                <input type="email" name="email" placeholder="Your Email" required className="bg-white/20 border border-white/30 text-white placeholder-white/50 rounded-lg px-4 py-2 text-sm sm:text-base" />
               </div>
-              <input type="text" name="subject" placeholder="Subject" required className="w-full bg-white/20 border-white/30 text-white placeholder-white/50 text-sm sm:text-base" />
-              <textarea name="message" placeholder="Your message..." rows={5} required className="w-full bg-white/20 border-white/30 text-white placeholder-white/50 text-sm sm:text-base" />
+              <input type="text" name="subject" placeholder="Subject" required className="w-full bg-white/20 border border-white/30 text-white placeholder-white/50 rounded-lg px-4 py-2 text-sm sm:text-base" />
+              <textarea name="message" placeholder="Your message..." rows={5} required className="w-full bg-white/20 border border-white/30 text-white placeholder-white/50 rounded-lg px-4 py-2 text-sm sm:text-base" />
               <button type="submit" className="btn w-full text-sm sm:text-base">
                 📤 Send Message
               </button>
@@ -556,20 +686,18 @@ export default function Home() {
   )
 }
 
-// Default data functions
+// Default Functions
 function getDefaultHero(): HeroData {
   return {
     title: 'Welcome to Bibi Rajni School',
     subtitle: 'Excellence in Education Since 1990',
-    description: 'Where excellence meets compassion. Nurturing tomorrow\'s leaders today.',
+    description: 'Where excellence meets compassion.',
     cta1Text: 'Apply Now',
     cta1Link: '/admissions',
     cta2Text: 'Explore More',
     cta2Link: '#programs',
     slides: [
       { image: '/images/school-building.jpg', caption: 'Our Campus' },
-      { image: '/images/classroom.jpg', caption: 'Smart Classrooms' },
-      { image: '/images/sports.jpg', caption: 'Sports Facilities' },
     ],
   }
 }
@@ -613,7 +741,7 @@ function getDefaultPrograms(): Programs {
 function getDefaultPrincipal(): Principal {
   return {
     title: 'From the Principal\'s Desk',
-    message: 'Dear Parents and Students, Bibi Rajni School has been a beacon of excellence for over three decades. Our commitment to holistic education ensures every student realizes their full potential.',
+    message: 'Dear Parents and Students, Bibi Rajni School has been a beacon of excellence for over three decades.',
     name: 'Dr. Rajinder Singh',
     position: 'Principal',
   }
@@ -626,21 +754,52 @@ function getDefaultTestimonials(): Testimonials {
       {
         name: 'Mr. Jatin Kumar',
         role: 'Parent',
-        message: 'Outstanding school with excellent faculty and modern facilities. Our child has grown tremendously.',
+        message: 'Outstanding school with excellent faculty and modern facilities.',
         image: '/images/testimonials/parent1.jpg',
-      },
-      {
-        name: 'Mrs. Priya Singh',
-        role: 'Parent',
-        message: 'The holistic approach to education here is commendable. Highly recommend Bibi Rajni School.',
-        image: '/images/testimonials/parent2.jpg',
-      },
-      {
-        name: 'Mr. Harman Gill',
-        role: 'Parent',
-        message: 'Best decision to enroll my child here. The teachers care and students flourish.',
-        image: '/images/testimonials/parent3.jpg',
       },
     ],
   }
+}
+
+function getDefaultSections(): Section[] {
+  return [
+    {
+      id: 'contact',
+      title: 'Stay Connected',
+      subtitle: 'Multiple Ways to Reach Us',
+      icon: '📞',
+      content: 'Get in touch with us through multiple channels. We are always available to answer your queries.',
+      image: '/images/contact.jpg',
+      link: '/contact',
+      linkText: 'Contact Us',
+    },
+    {
+      id: 'facilities',
+      title: 'World-Class Facilities',
+      subtitle: 'State-of-the-art Infrastructure',
+      icon: '🏢',
+      content: 'Our campus is equipped with modern facilities including smart classrooms, labs, and sports grounds.',
+      image: '/images/facilities.jpg',
+      link: '/facilities',
+      linkText: 'Explore Facilities',
+    },
+    {
+      id: 'rules',
+      title: 'School Rules & Regulations',
+      subtitle: 'Discipline & Conduct',
+      icon: '📖',
+      content: 'Guidelines and rules designed to maintain a healthy learning environment for all students.',
+      image: '/images/rules.jpg',
+      link: '/rules',
+      linkText: 'View Rules',
+    },
+  ]
+}
+
+function getDefaultGallery(): GalleryItem[] {
+  return [
+    { id: '1', title: 'Annual Day', category: 'Events', image: '/images/gallery/1.jpg' },
+    { id: '2', title: 'Sports Day', category: 'Sports', image: '/images/gallery/2.jpg' },
+    { id: '3', title: 'Campus Tour', category: 'Campus', image: '/images/gallery/3.jpg' },
+  ]
 }

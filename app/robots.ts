@@ -1,14 +1,12 @@
-import type { MetadataRoute } from 'next'
-
-export const dynamic = 'force-static'
+import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: '/admin',
+      disallow: ['/admin', '/api'],
     },
-    sitemap: 'https://dearestwall.github.io/bibirajnischool/sitemap.xml',
+    sitemap: 'https://your-domain.com/sitemap.xml',
   }
 }

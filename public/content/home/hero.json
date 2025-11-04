@@ -1,0 +1,23 @@
+﻿{
+  "title": "Welcome to Bibi Rajni School",
+  "subtitle": "Excellence in Education Since 1990",
+  "description": "Where excellence meets compassion. Nurturing tomorrow's leaders today.",
+  "cta1Text": "Apply Now",
+  "cta1Link": "/admissions",
+  "cta2Text": "Explore More",
+  "cta2Link": "#programs",
+  "slides": [
+    {
+      "image": "https://via.placeholder.com/1920x1080?text=School+Building",
+      "caption": "Our Campus"
+    },
+    {
+      "image": "https://via.placeholder.com/1920x1080?text=Classroom",
+      "caption": "Smart Classrooms"
+    },
+    {
+      "image": "https://via.placeholder.com/1920x1080?text=Sports",
+      "caption": "Sports Facilities"
+    }
+  ]
+}

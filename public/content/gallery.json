@@ -1,0 +1,28 @@
+{
+  "items": [
+    {
+      "id": "1",
+      "title": "Annual Day Celebration",
+      "category": "Events",
+      "image": "https://via.placeholder.com/400x300?text=Annual+Day"
+    },
+    {
+      "id": "2",
+      "title": "Sports Day Championship",
+      "category": "Sports",
+      "image": "https://via.placeholder.com/400x300?text=Sports+Day"
+    },
+    {
+      "id": "3",
+      "title": "Beautiful Campus View",
+      "category": "Campus",
+      "image": "https://via.placeholder.com/400x300?text=Campus"
+    },
+    {
+      "id": "4",
+      "title": "Science Exhibition",
+      "category": "Activities",
+      "image": "https://via.placeholder.com/400x300?text=Science+Expo"
+    }
+  ]
+}
