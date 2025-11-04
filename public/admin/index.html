@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Bibi Rajni School - Admin Panel</title>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' fill='%23059669'>🎓</text></svg>" />
     
-    <!-- Netlify Identity Widget -->
+    <!-- Netlify Identity -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
     <style>
@@ -18,26 +18,30 @@
       }
 
       html, body, #app {
-        height: 100%;
         width: 100%;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        height: 100%;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
 
       body {
         background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0f766e 100%);
+        min-height: 100vh;
       }
 
-      .loading-container {
+      /* Loading Screen */
+      #loading-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0f766e 100%);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 100vh;
-        text-align: center;
-        color: white;
         z-index: 9999;
         animation: fadeIn 0.8s ease-in;
       }
@@ -56,8 +60,8 @@
       .spinner {
         width: 80px;
         height: 80px;
-        border: 6px solid rgba(255, 255, 255, 0.2);
-        border-top: 6px solid white;
+        border: 4px solid rgba(255, 255, 255, 0.2);
+        border-top: 4px solid white;
         border-radius: 50%;
         animation: spin 1.2s linear infinite;
         margin: 0 auto 30px;
@@ -69,37 +73,55 @@
         }
       }
 
+      .loading-header {
+        font-size: 48px;
+        margin-bottom: 20px;
+        animation: bounce 2s infinite;
+      }
+
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+
       .loading-text {
-        font-size: 32px;
+        font-size: 28px;
         font-weight: 700;
-        letter-spacing: 1.5px;
+        letter-spacing: 1px;
         margin-bottom: 10px;
+        color: white;
         text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
       }
 
       .loading-subtext {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 400;
-        opacity: 0.95;
-        margin-bottom: 15px;
+        color: rgba(255, 255, 255, 0.95);
+        margin-bottom: 30px;
       }
 
       .loading-features {
         display: flex;
-        gap: 20px;
+        gap: 15px;
         justify-content: center;
-        margin-top: 30px;
         flex-wrap: wrap;
       }
 
       .feature-badge {
         background: rgba(255, 255, 255, 0.15);
         backdrop-filter: blur(10px);
-        padding: 10px 20px;
+        padding: 8px 16px;
         border-radius: 20px;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 500;
+        color: white;
         border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .feature-badge:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
       }
 
       .fade-out {
@@ -117,63 +139,79 @@
         }
       }
 
-      /* Custom CMS Styling */
-      [class*="EditorToolbar"] {
+      /* CMS Styling */
+      [class*="EditorToolbar"],
+      [class*="ControlHeader"],
+      [class*="CollectionTop"] {
         background: #059669 !important;
         border-color: #047857 !important;
-      }
-
-      [class*="EditorToolbar"] button {
         color: white !important;
       }
 
-      [class*="EditorToolbar"] button:hover {
-        background: rgba(255, 255, 255, 0.1) !important;
-      }
-
-      [class*="Button"][class*="primary"] {
+      [class*="Button"][class*="primary"],
+      [class*="Button"][class*="default"] {
         background: #059669 !important;
         color: white !important;
+        border: none !important;
       }
 
-      [class*="Button"][class*="primary"]:hover {
+      [class*="Button"][class*="primary"]:hover,
+      [class*="Button"][class*="default"]:hover {
         background: #047857 !important;
       }
 
       [class*="Card"] {
         border-left: 4px solid #059669 !important;
       }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .loading-text {
+          font-size: 24px;
+        }
+
+        .loading-features {
+          gap: 10px;
+        }
+
+        .feature-badge {
+          font-size: 11px;
+          padding: 6px 12px;
+        }
+      }
     </style>
   </head>
 
   <body>
-    <div id="loading-container" class="loading-container">
+    <div id="loading-container">
+      <div class="loading-header">🎓</div>
       <div class="spinner"></div>
-      <div class="loading-text">🎓 Bibi Rajni School</div>
+      <div class="loading-text">Bibi Rajni School</div>
       <div class="loading-subtext">Admin Panel</div>
       
       <div class="loading-features">
         <div class="feature-badge">📝 Decap CMS 3.9.0</div>
-        <div class="feature-badge">🔐 Git Gateway</div>
+        <div class="feature-badge">🔐 Git Gateway Auth</div>
         <div class="feature-badge">⚡ Netlify Powered</div>
+        <div class="feature-badge">📱 Responsive</div>
       </div>
     </div>
 
     <div id="app"></div>
 
-    <!-- Netlify Identity -->
+    <!-- Netlify Identity Widget -->
     <script>
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on('init', (user) => {
           if (!user) {
             window.netlifyIdentity.on('login', () => {
-              document.location.href = '/admin/'
-            })
+              document.location.href = '/admin/';
+            });
             if (typeof window.netlifyIdentity.show === 'function') {
-              window.netlifyIdentity.show()
+              window.netlifyIdentity.show();
             }
           }
-        })
+        });
       }
     </script>
 
@@ -181,24 +219,25 @@
     <script src="https://unpkg.com/decap-cms@3.9.0/dist/decap-cms.js"></script>
     <script src="https://unpkg.com/decap-cms-app@3.9.0/dist/index.js"></script>
 
-    <!-- Initialization -->
+    <!-- Initialize -->
     <script>
       window.addEventListener('load', () => {
         setTimeout(() => {
-          const loader = document.getElementById('loading-container')
+          const loader = document.getElementById('loading-container');
           if (loader) {
-            loader.classList.add('fade-out')
+            loader.classList.add('fade-out');
             setTimeout(() => {
-              loader.style.display = 'none'
-            }, 800)
+              loader.style.display = 'none';
+            }, 800);
           }
-        }, 2000)
-      })
+        }, 2000);
+      });
 
-      console.log('✅ Bibi Rajni Admin Panel')
-      console.log('🔐 Backend: Git Gateway')
-      console.log('📦 CMS: Decap CMS 3.9.0')
-      console.log('⚡ Powered by Netlify')
+      // Console logs
+      console.log('%c✅ Bibi Rajni Admin Panel Initialized', 'color: #059669; font-weight: bold; font-size: 14px;');
+      console.log('%c🔐 Backend: Git Gateway', 'color: #0d9488; font-size: 12px;');
+      console.log('%c📦 CMS: Decap CMS 3.9.0', 'color: #0f766e; font-size: 12px;');
+      console.log('%c⚡ Powered by Netlify', 'color: #059669; font-size: 12px;');
     </script>
   </body>
 </html>

@@ -2,12 +2,18 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Translator from '@/components/Translator'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 
 export const metadata: Metadata = {
   title: 'Bibi Rajni School - Excellence in Education',
-  description: 'Official website of Bibi Rajni School - Quality education with modern facilities.',
-  viewport: 'width=device-width, initial-scale=1',
+  description: 'Official website of Bibi Rajni School - Quality education with modern facilities in Tarn Taran.',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 }
 
 export default function RootLayout({
