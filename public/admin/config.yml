@@ -1,20 +1,18 @@
 backend:
   name: git-gateway
   branch: main
-  commit_messages:
-    create: 'Create {{collection}} "{{slug}}"'
-    update: 'Update {{collection}} "{{slug}}"'
-    delete: 'Delete {{collection}} "{{slug}}"'
-    uploadMedia: '[skip ci] Upload "{{path}}"'
-    deleteMedia: '[skip ci] Delete "{{path}}"'
+  # Disable editorial workflow to publish directly
+  auth_type: implicit
 
 media_folder: 'public/images'
 public_folder: '/images'
-publish_mode: editorial_workflow
+# REMOVE: publish_mode: editorial_workflow
 site_url: 'https://bibirajnischool.netlify.app/'
 display_url: 'https://bibirajnischool.netlify.app/'
 show_preview_links: true
 logo_url: 'https://via.placeholder.com/80x80?text=BR+School'
+
+# ... rest of collections config
 
 collections:
   # HOME - Single collection with multiple files
