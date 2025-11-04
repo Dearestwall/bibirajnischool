@@ -7,51 +7,59 @@
     <title>Bibi Rajni School - Admin Panel</title>
     <link rel="icon" href="/favicon.ico" />
     
-    <!-- Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     
     <style>
-      body {
+      * {
         margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 0;
+        box-sizing: border-box;
       }
       
-      .loading {
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
+        min-height: 100vh;
         display: flex;
-        justify-content: center;
         align-items: center;
-        height: 100vh;
+        justify-content: center;
+      }
+      
+      .loading-container {
+        text-align: center;
         color: white;
-        font-size: 1.5rem;
       }
       
-      .loading::after {
-        content: '...';
-        animation: dots 1.5s infinite;
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
       }
       
-      @keyframes dots {
-        0%, 20% { content: '.'; }
-        40% { content: '..'; }
-        60%, 100% { content: '...'; }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      
+      .loading-text {
+        font-size: 18px;
+        font-weight: 500;
       }
     </style>
   </head>
   <body>
-    <div class="loading">Loading Admin Panel</div>
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <div class="loading-text">Loading Admin Panel...</div>
+    </div>
     
-    <!-- Decap CMS -->
     <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
     
-    <!-- Custom CMS Configuration -->
     <script>
       // Auto-login for development
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        console.log('Development mode: Using local backend');
-      }
-      
-      // Redirect after login
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on("init", user => {
           if (!user) {
@@ -61,6 +69,11 @@
           }
         });
       }
+      
+      // Show success message on page load
+      window.addEventListener('load', () => {
+        console.log('Admin panel loaded successfully');
+      });
     </script>
   </body>
 </html>
