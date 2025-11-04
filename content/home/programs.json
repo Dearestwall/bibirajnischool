@@ -1,11 +1,11 @@
-{
+﻿{
   "title": "Why Choose Bibi Rajni?",
   "items": [
-    { "icon": "📚", "title": "CBSE Curriculum", "desc": "National standards aligned education" },
-    { "icon": "💻", "title": "Digital Learning", "desc": "Smart boards and online resources" },
-    { "icon": "⚽", "title": "Sports Program", "desc": "Multiple indoor/outdoor sports" },
-    { "icon": "🎨", "title": "Arts & Culture", "desc": "Music, dance, theater, debates" },
-    { "icon": "🔬", "title": "Science Labs", "desc": "Advanced hands-on experiments" },
-    { "icon": "🌍", "title": "Global Exposure", "desc": "Exchange and partnership programs" }
+    { "icon": "📚", "title": "CBSE Curriculum", "desc": "National standards" },
+    { "icon": "💻", "title": "Digital Learning", "desc": "Smart boards" },
+    { "icon": "⚽", "title": "Sports", "desc": "Multiple sports" },
+    { "icon": "🎨", "title": "Arts", "desc": "Music & culture" },
+    { "icon": "🔬", "title": "Labs", "desc": "Science labs" },
+    { "icon": "🌍", "title": "Global", "desc": "Exchange programs" }
   ]
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -73,26 +73,45 @@ interface Event {
   icon: string
 }
 
+interface TestimonialItem {
+  name: string
+  role: string
+  message: string
+  image: string
+}
+
+interface Testimonials {
+  title: string
+  items: TestimonialItem[]
+}
+
 export default function Home() {
   const [heroData, setHeroData] = useState<HeroData | null>(null)
   const [highlightsData, setHighlightsData] = useState<Highlights | null>(null)
   const [statsData, setStatsData] = useState<Stats | null>(null)
   const [programsData, setProgramsData] = useState<Programs | null>(null)
   const [principalData, setPrincipalData] = useState<Principal | null>(null)
+  const [testimonials, setTestimonials] = useState<Testimonials | null>(null)
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [events, setEvents] = useState<Event[]>([])
+  
   const [currentSlide, setCurrentSlide] = useState(0)
   const [stats, setStats] = useState<Record<number, number>>({})
+  const [statsAnimated, setStatsAnimated] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [currentTestimonial, setCurrentTestimonial] = useState(0)
+  
+  const statsRef = useRef<HTMLDivElement>(null)
 
+  // Load all CMS content
   useEffect(() => {
-    setMounted(true)
-    loadContent()
-  }, [])
+  setMounted(true)
+  loadContent()
+}, [])
 
   const loadContent = async () => {
     try {
-      const [hero, highlights, statsJson, programs, principal, notif, evt] = await Promise.all([
+      const [hero, highlights, statsJson, programs, principal, notif, evt, testimonials] = await Promise.all([
         fetch('/content/home/hero.json').then(r => r.ok ? r.json() : null),
         fetch('/content/home/highlights.json').then(r => r.ok ? r.json() : null),
         fetch('/content/home/stats.json').then(r => r.ok ? r.json() : null),
@@ -100,6 +119,7 @@ export default function Home() {
         fetch('/content/home/principal.json').then(r => r.ok ? r.json() : null),
         fetch('/content/home/notifications.json').then(r => r.ok ? r.json() : null),
         fetch('/content/home/events.json').then(r => r.ok ? r.json() : null),
+        fetch('/content/home/testimonials.json').then(r => r.ok ? r.json() : null),
       ])
 
       setHeroData(hero || getDefaultHero())
@@ -107,6 +127,7 @@ export default function Home() {
       setStatsData(statsJson || getDefaultStats())
       setProgramsData(programs || getDefaultPrograms())
       setPrincipalData(principal || getDefaultPrincipal())
+      setTestimonials(testimonials || getDefaultTestimonials())
       setNotifications(notif?.items || [])
       setEvents(evt?.items || [])
     } catch (error) {
@@ -114,6 +135,7 @@ export default function Home() {
     }
   }
 
+  // Auto-advance hero slider
   useEffect(() => {
     if (!heroData?.slides || heroData.slides.length <= 1) return
     const timer = setInterval(() => {
@@ -122,11 +144,23 @@ export default function Home() {
     return () => clearInterval(timer)
   }, [heroData?.slides])
 
+  // Auto-advance testimonials
   useEffect(() => {
-    if (!statsData) return
+    if (!testimonials?.items || testimonials.items.length <= 1) return
+    const timer = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.items.length)
+    }, 6000)
+    return () => clearInterval(timer)
+  }, [testimonials?.items])
+
+  // Animate stats once on scroll
+  useEffect(() => {
+    if (!statsData || statsAnimated) return
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !statsAnimated) {
+          setStatsAnimated(true)
           statsData.items.forEach((item, idx) => {
             const increment = Math.ceil(item.value / 50)
             let current = 0
@@ -144,52 +178,24 @@ export default function Home() {
       { threshold: 0.1 }
     )
 
-    const statsSection = document.getElementById('stats-section')
-    if (statsSection) observer.observe(statsSection)
+    if (statsRef.current) observer.observe(statsRef.current)
     return () => observer.disconnect()
-  }, [statsData])
+  }, [statsData, statsAnimated])
 
   if (!mounted) return <div className="h-screen bg-gradient-to-br from-emerald-50 to-teal-50" />
 
   return (
     <>
-      {/* NOTIFICATION BANNER */}
-      {notifications.length > 0 && (
-        <div className="sticky top-0 z-50 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white overflow-hidden shadow-lg">
-          <div className="h-12 flex items-center">
-            <div className="wrap w-full flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3 min-w-0 flex-1">
-                <span className="text-xl animate-pulse">📢</span>
-                <div className="overflow-hidden flex-1">
-                  <motion.div
-                    animate={{ x: ['0%', '-100%'] }}
-                    transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                    className="whitespace-nowrap"
-                  >
-                    {notifications.map((notif) => (
-                      <span key={notif.id} className="inline-block px-4">
-                        {notif.icon} {notif.text}
-                      </span>
-                    ))}
-                  </motion.div>
-                </div>
-              </div>
-              <Link href="/contact" className="text-sm font-bold hover:underline whitespace-nowrap">
-                Learn More →
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
+     
 
       {/* HERO SLIDER */}
       <section className="relative h-screen overflow-hidden bg-black">
         <AnimatePresence initial={false}>
           <motion.div
             key={currentSlide}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 1 }}
             className="absolute inset-0"
           >
@@ -199,6 +205,7 @@ export default function Home() {
                   src={heroData.slides[currentSlide].image}
                   alt={heroData.slides[currentSlide].caption}
                   className="w-full h-full object-cover"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/30" />
               </>
@@ -206,96 +213,101 @@ export default function Home() {
           </motion.div>
         </AnimatePresence>
 
+        {/* HERO CONTENT */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4 z-10">
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-4 drop-shadow-2xl"
+            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-3 sm:mb-4 drop-shadow-2xl"
           >
             {heroData?.title}
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-xl sm:text-2xl md:text-3xl mb-8 text-white/95 drop-shadow-lg"
+            transition={{ delay: 0.1 }}
+            className="text-lg sm:text-2xl md:text-3xl mb-4 sm:mb-6 text-white/95 drop-shadow-lg"
           >
             {heroData?.subtitle}
           </motion.p>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-base sm:text-lg md:text-xl max-w-3xl mb-8 sm:mb-12 text-white/90 drop-shadow-lg"
+            transition={{ delay: 0.2 }}
+            className="text-sm sm:text-base md:text-lg max-w-2xl sm:max-w-3xl mb-6 sm:mb-10 text-white/90 drop-shadow-lg"
           >
             {heroData?.description}
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4"
+            transition={{ delay: 0.3 }}
+            className="flex flex-col xs:flex-row gap-3 sm:gap-4 flex-wrap justify-center"
           >
-            <Link href={heroData?.cta1Link || '/'} className="btn">
+            <Link href={heroData?.cta1Link || '/'} className="btn text-sm sm:text-base">
               {heroData?.cta1Text}
             </Link>
-            <a href={heroData?.cta2Link || '#'} className="btn-secondary bg-white/20 border-white text-white hover:bg-white/30">
+            <a href={heroData?.cta2Link || '#'} className="btn-secondary bg-white/20 border-white text-white hover:bg-white/30 text-sm sm:text-base">
               {heroData?.cta2Text} ↓
             </a>
           </motion.div>
         </div>
 
+        {/* SLIDER CONTROLS */}
         {heroData?.slides && heroData.slides.length > 1 && (
           <>
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+            <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
               {heroData.slides.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentSlide(idx)}
-                  className={`h-2 rounded-full transition-all ${
-                    idx === currentSlide ? 'bg-white w-8' : 'bg-white/50 w-2 hover:bg-white/75'
+                  className={`h-1.5 sm:h-2 rounded-full transition-all ${
+                    idx === currentSlide ? 'bg-white w-6 sm:w-8' : 'bg-white/50 w-1.5 sm:w-2 hover:bg-white/75'
                   }`}
+                  aria-label={`Go to slide ${idx + 1}`}
                 />
               ))}
             </div>
 
             <button
               onClick={() => setCurrentSlide((prev) => (prev - 1 + heroData.slides.length) % heroData.slides.length)}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white p-3 rounded-full transition-all"
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white p-2 sm:p-3 rounded-full transition-all hover:scale-110"
+              aria-label="Previous slide"
             >
-              ←
+              <span className="text-lg sm:text-2xl">←</span>
             </button>
             <button
               onClick={() => setCurrentSlide((prev) => (prev + 1) % heroData.slides.length)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white p-3 rounded-full transition-all"
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white p-2 sm:p-3 rounded-full transition-all hover:scale-110"
+              aria-label="Next slide"
             >
-              →
+              <span className="text-lg sm:text-2xl">→</span>
             </button>
           </>
         )}
       </section>
 
       {/* HIGHLIGHTS */}
-      {highlightsData && highlightsData.cards.length > 0 && (
+      {highlightsData?.cards.length && (
         <section className="section bg-white">
           <div className="wrap">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
               {highlightsData.cards.map((card, idx) => (
                 <motion.div
                   key={idx}
-                  className={`card-gradient bg-gradient-to-br ${card.color}`}
+                  className={`card-gradient bg-gradient-to-br ${card.color} p-4 sm:p-6`}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1 }}
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.05, y: -5 }}
                 >
-                  <motion.div className="text-6xl mb-4" whileHover={{ rotate: 15, scale: 1.2 }}>
+                  <motion.div className="text-4xl sm:text-6xl mb-3 sm:mb-4" whileHover={{ rotate: 15, scale: 1.2 }}>
                     {card.icon}
                   </motion.div>
-                  <h3 className="font-bold text-xl mb-2">{card.title}</h3>
-                  <p className="text-white/90">{card.description}</p>
+                  <h3 className="font-bold text-base sm:text-xl mb-2">{card.title}</h3>
+                  <p className="text-white/90 text-sm sm:text-base">{card.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -307,20 +319,21 @@ export default function Home() {
       {principalData && (
         <section className="section bg-gradient-to-br from-gray-50 to-gray-100">
           <div className="wrap">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
               {principalData.image && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  className="flex justify-center"
+                  className="flex justify-center order-2 md:order-1"
                 >
-                  <div className="relative w-full max-w-sm">
+                  <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-none">
                     <div className="absolute -inset-4 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-2xl blur-xl opacity-30" />
                     <img
                       src={principalData.image}
                       alt={principalData.name}
                       className="relative rounded-2xl shadow-2xl w-full h-auto object-cover aspect-square"
+                      loading="lazy"
                     />
                   </div>
                 </motion.div>
@@ -329,19 +342,13 @@ export default function Home() {
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="space-y-6"
+                className="space-y-4 sm:space-y-6 order-1 md:order-2"
               >
-                <h2 className="text-4xl font-bold">{principalData.title}</h2>
-                <div className="prose prose-lg text-gray-600">
-                  {principalData.message.split('\n').map((para, idx) => (
-                    <p key={idx} className="leading-relaxed mb-4">
-                      {para}
-                    </p>
-                  ))}
-                </div>
+                <h2 className="text-2xl sm:text-4xl font-bold text-gray-900">{principalData.title}</h2>
+                <p className="text-gray-600 text-sm sm:text-base leading-relaxed">{principalData.message}</p>
                 <div className="pt-4 border-t-2 border-emerald-200">
-                  <p className="font-bold text-xl">{principalData.name}</p>
-                  <p className="text-emerald-600 font-semibold">{principalData.position}</p>
+                  <p className="font-bold text-lg sm:text-xl text-gray-900">{principalData.name}</p>
+                  <p className="text-emerald-600 font-semibold text-sm sm:text-base">{principalData.position}</p>
                 </div>
               </motion.div>
             </div>
@@ -353,20 +360,20 @@ export default function Home() {
       {events.length > 0 && (
         <section className="section bg-white">
           <div className="wrap">
-            <h2 className="text-4xl font-bold text-center mb-12">🎯 Upcoming Events</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            <h2 className="text-2xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-900">🎯 Upcoming Events</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
               {events.map((event, idx) => (
                 <motion.div
                   key={event.id}
-                  className="card"
+                  className="card hover:shadow-xl transition-all"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <div className="text-5xl mb-3">{event.icon}</div>
-                  <h4 className="font-bold text-gray-900 mb-2">{event.title}</h4>
-                  <p className="text-emerald-600 font-semibold text-sm">{event.date}</p>
+                  <div className="text-4xl sm:text-5xl mb-3">{event.icon}</div>
+                  <h4 className="font-bold text-gray-900 mb-2 text-sm sm:text-base">{event.title}</h4>
+                  <p className="text-emerald-600 font-semibold text-xs sm:text-sm">{event.date}</p>
                 </motion.div>
               ))}
             </div>
@@ -375,49 +382,28 @@ export default function Home() {
       )}
 
       {/* STATS */}
-      {statsData && statsData.items.length > 0 && (
+      {statsData?.items && (
         <section
+          ref={statsRef}
           id="stats-section"
           className="section bg-gradient-to-r from-emerald-700 to-teal-800 text-white"
         >
           <div className="wrap">
-            <h2 className="text-4xl font-bold text-center mb-12">Our Legacy</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <h2 className="text-2xl sm:text-4xl font-bold text-center mb-8 sm:mb-12">Our Legacy of Excellence</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
               {statsData.items.map((item, idx) => (
-                <div
+                <motion.div
                   key={idx}
-                  className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all"
+                  className="text-center p-4 sm:p-6 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
                 >
-                  <div className="text-5xl font-bold mb-2">
+                  <div className="text-3xl sm:text-5xl font-bold mb-2">
                     {stats[idx] || 0}
                     {item.suffix}
                   </div>
-                  <p className="text-white/80">{item.label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* PROGRAMS */}
-      {programsData && programsData.items.length > 0 && (
-        <section id="programs" className="section bg-white">
-          <div className="wrap">
-            <h2 className="text-4xl font-bold text-center mb-12">{programsData.title}</h2>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {programsData.items.map((prog, idx) => (
-                <motion.div
-                  key={idx}
-                  className="card"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="text-6xl mb-4">{prog.icon}</div>
-                  <h3 className="font-bold text-xl mb-2">{prog.title}</h3>
-                  <p className="text-gray-600">{prog.desc}</p>
+                  <p className="text-white/80 text-xs sm:text-base">{item.label}</p>
                 </motion.div>
               ))}
             </div>
@@ -425,13 +411,85 @@ export default function Home() {
         </section>
       )}
 
+      {/* PROGRAMS */}
+      {programsData?.items && (
+        <section id="programs" className="section bg-white">
+          <div className="wrap">
+            <h2 className="text-2xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-900">{programsData.title}</h2>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+              {programsData.items.map((prog, idx) => (
+                <motion.div
+                  key={idx}
+                  className="card hover:border-emerald-400 hover:bg-emerald-50/50"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="text-4xl sm:text-6xl mb-4">{prog.icon}</div>
+                  <h3 className="font-bold text-base sm:text-xl mb-2 text-gray-900">{prog.title}</h3>
+                  <p className="text-gray-600 text-sm sm:text-base">{prog.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* TESTIMONIALS */}
+      {testimonials?.items && testimonials.items.length > 0 && (
+        <section className="section bg-gradient-to-br from-gray-50 to-gray-100">
+          <div className="wrap">
+            <h2 className="text-2xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-900">💬 What Parents Say</h2>
+            <div className="max-w-2xl mx-auto">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentTestimonial}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="card bg-white text-center"
+                >
+                  <div className="flex justify-center mb-4">
+                    {testimonials.items[currentTestimonial].image && (
+                      <img
+                        src={testimonials.items[currentTestimonial].image}
+                        alt={testimonials.items[currentTestimonial].name}
+                        className="w-16 sm:w-20 h-16 sm:h-20 rounded-full object-cover border-4 border-emerald-600"
+                      />
+                    )}
+                  </div>
+                  <p className="text-gray-600 text-sm sm:text-base mb-4 italic">{testimonials.items[currentTestimonial].message}</p>
+                  <p className="font-bold text-gray-900 text-sm sm:text-base">{testimonials.items[currentTestimonial].name}</p>
+                  <p className="text-emerald-600 font-semibold text-xs sm:text-sm">{testimonials.items[currentTestimonial].role}</p>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Testimonial Navigation */}
+              <div className="flex justify-center gap-2 mt-6">
+                {testimonials.items.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentTestimonial(idx)}
+                    className={`h-2 rounded-full transition-all ${
+                      idx === currentTestimonial ? 'bg-emerald-600 w-8' : 'bg-gray-300 w-2 hover:bg-gray-400'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* MAP & CONTACT */}
-      <section className="section bg-gray-50">
+      <section className="section bg-white">
         <div className="wrap">
-          <h2 className="text-4xl font-bold text-center mb-12">Get in Touch</h2>
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+          <h2 className="text-2xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-900">Get in Touch</h2>
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
             <motion.div
-              className="rounded-2xl overflow-hidden shadow-xl h-96"
+              className="rounded-2xl overflow-hidden shadow-xl h-64 sm:h-80 md:h-96"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -443,42 +501,29 @@ export default function Home() {
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3436.6789706587556!2d74.8725!3d31.4707!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3919e5f62e6e5555%3A0x1234567890!2sTarn%20Taran!5e0!3m2!1sen!2sin!4v1234567890123"
                 allowFullScreen
                 loading="lazy"
+                title="School Location"
               />
             </motion.div>
 
-            <div className="space-y-6">
-              <motion.div
-                className="card text-center"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                <div className="text-5xl mb-4">📍</div>
-                <h3 className="font-bold text-lg">Address</h3>
-                <p className="text-gray-600">Tarn Taran, Punjab, India</p>
-              </motion.div>
-              <motion.div
-                className="card text-center"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                viewport={{ once: true }}
-              >
-                <div className="text-5xl mb-4">📞</div>
-                <h3 className="font-bold text-lg">Phone</h3>
-                <p className="text-gray-600">+91 123 456 7890</p>
-              </motion.div>
-              <motion.div
-                className="card text-center"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                viewport={{ once: true }}
-              >
-                <div className="text-5xl mb-4">✉️</div>
-                <h3 className="font-bold text-lg">Email</h3>
-                <p className="text-gray-600">info@bibirajnischool.edu</p>
-              </motion.div>
+            <div className="space-y-4 sm:space-y-6">
+              {[
+                { icon: '📍', title: 'Address', text: 'Tarn Taran, Punjab, India' },
+                { icon: '📞', title: 'Phone', text: '+91 123 456 7890' },
+                { icon: '✉️', title: 'Email', text: 'info@bibirajnischool.edu' },
+              ].map((info, idx) => (
+                <motion.div
+                  key={idx}
+                  className="card text-center hover:shadow-xl transition-all"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="text-4xl sm:text-5xl mb-3">{info.icon}</div>
+                  <h3 className="font-bold text-base sm:text-lg text-gray-900">{info.title}</h3>
+                  <p className="text-gray-600 text-sm sm:text-base">{info.text}</p>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
@@ -487,20 +532,20 @@ export default function Home() {
       {/* CONTACT FORM */}
       <section className="section bg-gradient-to-br from-emerald-600 to-teal-600 text-white">
         <div className="wrap">
-          <h2 className="text-4xl font-bold text-center mb-12">Contact Us</h2>
+          <h2 className="text-2xl sm:text-4xl font-bold text-center mb-8 sm:mb-12">Send us a Message</h2>
           <div className="max-w-2xl mx-auto">
             <form
               action="https://formspree.io/f/mrbowgyy"
               method="POST"
-              className="space-y-6 p-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20"
+              className="space-y-4 sm:space-y-6 p-6 sm:p-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20"
             >
-              <div className="grid sm:grid-cols-2 gap-6">
-                <input type="text" name="name" placeholder="Your Name" required className="bg-white/20 border-white/30 text-white placeholder-white/50" />
-                <input type="email" name="email" placeholder="Your Email" required className="bg-white/20 border-white/30 text-white placeholder-white/50" />
+              <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+                <input type="text" name="name" placeholder="Your Name" required className="bg-white/20 border-white/30 text-white placeholder-white/50 text-sm sm:text-base" />
+                <input type="email" name="email" placeholder="Your Email" required className="bg-white/20 border-white/30 text-white placeholder-white/50 text-sm sm:text-base" />
               </div>
-              <input type="text" name="subject" placeholder="Subject" required className="w-full bg-white/20 border-white/30 text-white placeholder-white/50" />
-              <textarea name="message" placeholder="Your message..." rows={5} required className="w-full bg-white/20 border-white/30 text-white placeholder-white/50" />
-              <button type="submit" className="btn w-full">
+              <input type="text" name="subject" placeholder="Subject" required className="w-full bg-white/20 border-white/30 text-white placeholder-white/50 text-sm sm:text-base" />
+              <textarea name="message" placeholder="Your message..." rows={5} required className="w-full bg-white/20 border-white/30 text-white placeholder-white/50 text-sm sm:text-base" />
+              <button type="submit" className="btn w-full text-sm sm:text-base">
                 📤 Send Message
               </button>
             </form>
@@ -511,41 +556,91 @@ export default function Home() {
   )
 }
 
+// Default data functions
 function getDefaultHero(): HeroData {
   return {
     title: 'Welcome to Bibi Rajni School',
     subtitle: 'Excellence in Education Since 1990',
-    description: 'Where excellence meets compassion.',
+    description: 'Where excellence meets compassion. Nurturing tomorrow\'s leaders today.',
     cta1Text: 'Apply Now',
     cta1Link: '/admissions',
     cta2Text: 'Explore More',
     cta2Link: '#programs',
-    slides: [{ image: '/images/school-building.jpg', caption: 'Our Campus' }],
+    slides: [
+      { image: '/images/school-building.jpg', caption: 'Our Campus' },
+      { image: '/images/classroom.jpg', caption: 'Smart Classrooms' },
+      { image: '/images/sports.jpg', caption: 'Sports Facilities' },
+    ],
   }
 }
 
 function getDefaultHighlights(): Highlights {
   return {
     cards: [
-      { icon: '🏆', title: 'Academic Excellence', description: '98% pass rate', color: 'from-blue-500 to-blue-600' },
-      { icon: '🎓', title: 'Faculty', description: 'World-class educators', color: 'from-purple-500 to-purple-600' },
+      { icon: '🏆', title: 'Excellence', description: '98% pass rate', color: 'from-blue-500 to-blue-600' },
+      { icon: '🎓', title: 'Faculty', description: 'Experienced educators', color: 'from-purple-500 to-purple-600' },
+      { icon: '🌟', title: 'Infrastructure', description: 'Modern facilities', color: 'from-pink-500 to-pink-600' },
+      { icon: '🤝', title: 'Development', description: 'Holistic growth', color: 'from-green-500 to-green-600' },
     ],
   }
 }
 
 function getDefaultStats(): Stats {
-  return { items: [{ value: 34, suffix: '+', label: 'Years' }] }
+  return {
+    items: [
+      { value: 34, suffix: '+', label: 'Years' },
+      { value: 2000, suffix: '+', label: 'Alumni' },
+      { value: 98, suffix: '%', label: 'Pass Rate' },
+      { value: 500, suffix: '+', label: 'Students' },
+    ],
+  }
 }
 
 function getDefaultPrograms(): Programs {
-  return { title: 'Why Choose Bibi Rajni?', items: [{ icon: '📚', title: 'CBSE', desc: 'Standard' }] }
+  return {
+    title: 'Why Choose Bibi Rajni?',
+    items: [
+      { icon: '📚', title: 'CBSE Curriculum', desc: 'National standards' },
+      { icon: '💻', title: 'Digital Learning', desc: 'Smart boards' },
+      { icon: '⚽', title: 'Sports', desc: 'Multiple sports' },
+      { icon: '🎨', title: 'Arts', desc: 'Music & culture' },
+      { icon: '🔬', title: 'Labs', desc: 'Science labs' },
+      { icon: '🌍', title: 'Global', desc: 'Exchange programs' },
+    ],
+  }
 }
 
 function getDefaultPrincipal(): Principal {
   return {
     title: 'From the Principal\'s Desk',
-    message: 'Welcome to our school...',
+    message: 'Dear Parents and Students, Bibi Rajni School has been a beacon of excellence for over three decades. Our commitment to holistic education ensures every student realizes their full potential.',
     name: 'Dr. Rajinder Singh',
     position: 'Principal',
+  }
+}
+
+function getDefaultTestimonials(): Testimonials {
+  return {
+    title: 'What Parents Say',
+    items: [
+      {
+        name: 'Mr. Jatin Kumar',
+        role: 'Parent',
+        message: 'Outstanding school with excellent faculty and modern facilities. Our child has grown tremendously.',
+        image: '/images/testimonials/parent1.jpg',
+      },
+      {
+        name: 'Mrs. Priya Singh',
+        role: 'Parent',
+        message: 'The holistic approach to education here is commendable. Highly recommend Bibi Rajni School.',
+        image: '/images/testimonials/parent2.jpg',
+      },
+      {
+        name: 'Mr. Harman Gill',
+        role: 'Parent',
+        message: 'Best decision to enroll my child here. The teachers care and students flourish.',
+        image: '/images/testimonials/parent3.jpg',
+      },
+    ],
   }
 }

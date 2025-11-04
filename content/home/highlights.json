@@ -1,28 +1,8 @@
-{
+﻿{
   "cards": [
-    {
-      "icon": "🏆",
-      "title": "Academic Excellence",
-      "description": "98% board pass rate with 2000+ successful alumni",
-      "color": "from-blue-500 to-blue-600"
-    },
-    {
-      "icon": "🎓",
-      "title": "World-Class Faculty",
-      "description": "Experienced educators dedicated to student growth",
-      "color": "from-purple-500 to-purple-600"
-    },
-    {
-      "icon": "🌟",
-      "title": "Modern Infrastructure",
-      "description": "Smart classrooms, labs, sports complex, auditorium",
-      "color": "from-pink-500 to-pink-600"
-    },
-    {
-      "icon": "🤝",
-      "title": "Holistic Development",
-      "description": "Sports, arts, culture, and character building",
-      "color": "from-green-500 to-green-600"
-    }
+    { "icon": "🏆", "title": "Academic Excellence", "description": "98% pass rate", "color": "from-blue-500 to-blue-600" },
+    { "icon": "🎓", "title": "Faculty", "description": "Experienced educators", "color": "from-purple-500 to-purple-600" },
+    { "icon": "🌟", "title": "Infrastructure", "description": "Modern facilities", "color": "from-pink-500 to-pink-600" },
+    { "icon": "🤝", "title": "Development", "description": "Holistic growth", "color": "from-green-500 to-green-600" }
   ]
 }

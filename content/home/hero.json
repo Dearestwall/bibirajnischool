@@ -1,27 +1,14 @@
-{
+﻿{
   "title": "Welcome to Bibi Rajni School",
   "subtitle": "Excellence in Education Since 1990",
-  "description": "Where excellence meets compassion. We nurture confident, compassionate learners through holistic education, modern facilities, and dedicated mentors.",
+  "description": "Where excellence meets compassion.",
   "cta1Text": "Apply Now",
   "cta1Link": "/admissions",
   "cta2Text": "Explore More",
   "cta2Link": "#programs",
   "slides": [
-    {
-      "image": "/images/school-building.jpg",
-      "caption": "Our Modern Campus"
-    },
-    {
-      "image": "/images/classroom.jpg",
-      "caption": "Smart Classrooms"
-    },
-    {
-      "image": "/images/sports.jpg",
-      "caption": "Sports Facilities"
-    },
-    {
-      "image": "/images/students.jpg",
-      "caption": "Our Students"
-    }
+    { "image": "/images/school-building.jpg", "caption": "Our Campus" },
+    { "image": "/images/classroom.jpg", "caption": "Smart Classrooms" },
+    { "image": "/images/sports.jpg", "caption": "Sports Facilities" }
   ]
 }

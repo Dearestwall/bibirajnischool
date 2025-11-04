@@ -6,74 +6,97 @@
     <meta name="robots" content="noindex" />
     <title>Bibi Rajni School - Admin Panel</title>
     <link rel="icon" href="/favicon.ico" />
-    
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    
     <style>
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
-      
+
+      html,
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
-        min-height: 100vh;
+        height: 100%;
+        width: 100%;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0f766e 100%);
         display: flex;
         align-items: center;
         justify-content: center;
+        min-height: 100vh;
       }
-      
+
       .loading-container {
         text-align: center;
         color: white;
+        z-index: 9999;
       }
-      
+
       .spinner {
-        width: 50px;
-        height: 50px;
-        border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid white;
+        width: 60px;
+        height: 60px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-top: 5px solid white;
         border-radius: 50%;
         animation: spin 1s linear infinite;
-        margin: 0 auto 20px;
+        margin: 0 auto 25px;
       }
-      
+
       @keyframes spin {
-        to { transform: rotate(360deg); }
+        to {
+          transform: rotate(360deg);
+        }
       }
-      
+
       .loading-text {
-        font-size: 18px;
-        font-weight: 500;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+
+      .loading-subtext {
+        font-size: 14px;
+        font-weight: 400;
+        margin-top: 15px;
+        opacity: 0.9;
       }
     </style>
   </head>
   <body>
     <div class="loading-container">
       <div class="spinner"></div>
-      <div class="loading-text">Loading Admin Panel...</div>
+      <div class="loading-text">Loading Admin Panel</div>
+      <div class="loading-subtext">Content Management System</div>
     </div>
-    
+
     <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
-    
+
     <script>
-      // Auto-login for development
+      // Handle authentication
       if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", user => {
+        window.netlifyIdentity.on('init', (user) => {
           if (!user) {
-            window.netlifyIdentity.on("login", () => {
-              document.location.href = "/admin/";
-            });
+            window.netlifyIdentity.on('login', () => {
+              document.location.href = '/admin/'
+            })
           }
-        });
+        })
       }
-      
-      // Show success message on page load
+
+      // Remove loading on CMS load
       window.addEventListener('load', () => {
-        console.log('Admin panel loaded successfully');
-      });
+        setTimeout(() => {
+          const loader = document.querySelector('.loading-container')
+          if (loader) {
+            loader.style.display = 'none'
+          }
+        }, 1500)
+      })
+
+      console.log('Admin panel initialized successfully')
     </script>
   </body>
 </html>
