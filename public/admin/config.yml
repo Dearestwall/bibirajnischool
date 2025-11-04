@@ -233,6 +233,40 @@ collections:
                 widget: 'image'
                 required: false
 
+      - name: 'sections'
+        label: 'Home Sections'
+        file: 'content/home/sections.json'
+        fields:
+          - label: 'Sections'
+            name: 'items'
+            widget: 'list'
+            allow_add: true
+            fields:
+              - label: 'ID'
+                name: 'id'
+                widget: 'string'
+              - label: 'Title'
+                name: 'title'
+                widget: 'string'
+              - label: 'Subtitle'
+                name: 'subtitle'
+                widget: 'string'
+              - label: 'Icon'
+                name: 'icon'
+                widget: 'string'
+              - label: 'Content'
+                name: 'content'
+                widget: 'markdown'
+              - label: 'Image'
+                name: 'image'
+                widget: 'image'
+              - label: 'Link'
+                name: 'link'
+                widget: 'string'
+              - label: 'Link Text'
+                name: 'linkText'
+                widget: 'string'
+
   # PAGES
   - name: 'pages'
     label: '📄 Pages'
@@ -324,7 +358,7 @@ collections:
             name: 'message'
             widget: 'markdown'
 
-  # NEWS
+  # NEWS & NOTICES
   - name: 'news'
     label: '📰 News & Notices'
     folder: 'content/news'
@@ -366,78 +400,16 @@ collections:
         name: 'category'
         widget: 'select'
         options:
-          - { label: 'Events', value: 'events' }
-          - { label: 'Campus', value: 'campus' }
-          - { label: 'Activities', value: 'activities' }
-          - { label: 'Sports', value: 'sports' }
+          - { label: 'Events', value: 'Events' }
+          - { label: 'Sports', value: 'Sports' }
+          - { label: 'Campus', value: 'Campus' }
+          - { label: 'Activities', value: 'Activities' }
       - label: 'Date'
         name: 'date'
         widget: 'datetime'
       - label: 'Description'
         name: 'description'
         widget: 'text'
-      - label: 'Images'
-        name: 'images'
-        widget: 'list'
-        allow_add: true
-        field:
-          label: 'Image'
-          name: 'image'
-          widget: 'image'
-      - name: 'sections'
-        label: 'Home Sections'
-        file: 'content/home/sections.json'
-        fields:
-          - label: 'Sections'
-            name: 'items'
-            widget: 'list'
-            allow_add: true
-            fields:
-              - label: 'ID'
-                name: 'id'
-                widget: 'string'
-              - label: 'Title'
-                name: 'title'
-                widget: 'string'
-              - label: 'Subtitle'
-                name: 'subtitle'
-                widget: 'string'
-              - label: 'Icon'
-                name: 'icon'
-                widget: 'string'
-              - label: 'Content'
-                name: 'content'
-                widget: 'markdown'
-              - label: 'Image'
-                name: 'image'
-                widget: 'image'
-              - label: 'Link'
-                name: 'link'
-                widget: 'string'
-              - label: 'Link Text'
-                name: 'linkText'
-                widget: 'string'
-
-  - name: 'gallery'
-    label: '🖼️ Gallery Items'
-    folder: 'content/gallery'
-    create: true
-    slug: '{{slug}}'
-    fields:
-      - label: 'ID'
-        name: 'id'
-        widget: 'string'
-      - label: 'Title'
-        name: 'title'
-        widget: 'string'
-      - label: 'Category'
-        name: 'category'
-        widget: 'select'
-        options:
-          - { label: 'Events', value: 'Events' }
-          - { label: 'Sports', value: 'Sports' }
-          - { label: 'Campus', value: 'Campus' }
-          - { label: 'Activities', value: 'Activities' }
       - label: 'Image'
         name: 'image'
         widget: 'image'
