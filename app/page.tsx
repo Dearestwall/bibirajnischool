@@ -105,7 +105,6 @@ interface GalleryItem {
 }
 
 export default function Home() {
-  // State
   const [heroData, setHeroData] = useState<HeroData | null>(null)
   const [highlightsData, setHighlightsData] = useState<Highlights | null>(null)
   const [statsData, setStatsData] = useState<Stats | null>(null)
@@ -126,7 +125,6 @@ export default function Home() {
 
   const statsRef = useRef<HTMLDivElement>(null)
 
-  // Load all CMS content - ONLY from CMS
   useEffect(() => {
     setMounted(true)
     loadContent()
@@ -134,6 +132,8 @@ export default function Home() {
 
   const loadContent = async () => {
     try {
+      console.log('Loading content from /public/content/...')
+      
       const [
         hero,
         highlights,
@@ -146,17 +146,99 @@ export default function Home() {
         sections,
         gallery,
       ] = await Promise.all([
-        fetch('/content/home/hero.json').then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch('/content/home/highlights.json').then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch('/content/home/stats.json').then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch('/content/home/programs.json').then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch('/content/home/principal.json').then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch('/content/home/notifications.json').then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch('/content/home/events.json').then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch('/content/home/testimonials.json').then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch('/content/home/sections.json').then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch('/content/gallery.json').then(r => r.ok ? r.json() : null).catch(() => null),
+        fetch('/content/home/hero.json', { cache: 'no-store' })
+          .then(r => {
+            console.log('hero.json:', r.status)
+            return r.ok ? r.json() : null
+          })
+          .catch(e => {
+            console.error('Error loading hero.json:', e)
+            return null
+          }),
+        fetch('/content/home/highlights.json', { cache: 'no-store' })
+          .then(r => {
+            console.log('highlights.json:', r.status)
+            return r.ok ? r.json() : null
+          })
+          .catch(e => {
+            console.error('Error loading highlights.json:', e)
+            return null
+          }),
+        fetch('/content/home/stats.json', { cache: 'no-store' })
+          .then(r => {
+            console.log('stats.json:', r.status)
+            return r.ok ? r.json() : null
+          })
+          .catch(e => {
+            console.error('Error loading stats.json:', e)
+            return null
+          }),
+        fetch('/content/home/programs.json', { cache: 'no-store' })
+          .then(r => {
+            console.log('programs.json:', r.status)
+            return r.ok ? r.json() : null
+          })
+          .catch(e => {
+            console.error('Error loading programs.json:', e)
+            return null
+          }),
+        fetch('/content/home/principal.json', { cache: 'no-store' })
+          .then(r => {
+            console.log('principal.json:', r.status)
+            return r.ok ? r.json() : null
+          })
+          .catch(e => {
+            console.error('Error loading principal.json:', e)
+            return null
+          }),
+        fetch('/content/home/notifications.json', { cache: 'no-store' })
+          .then(r => {
+            console.log('notifications.json:', r.status)
+            return r.ok ? r.json() : null
+          })
+          .catch(e => {
+            console.error('Error loading notifications.json:', e)
+            return null
+          }),
+        fetch('/content/home/events.json', { cache: 'no-store' })
+          .then(r => {
+            console.log('events.json:', r.status)
+            return r.ok ? r.json() : null
+          })
+          .catch(e => {
+            console.error('Error loading events.json:', e)
+            return null
+          }),
+        fetch('/content/home/testimonials.json', { cache: 'no-store' })
+          .then(r => {
+            console.log('testimonials.json:', r.status)
+            return r.ok ? r.json() : null
+          })
+          .catch(e => {
+            console.error('Error loading testimonials.json:', e)
+            return null
+          }),
+        fetch('/content/home/sections.json', { cache: 'no-store' })
+          .then(r => {
+            console.log('sections.json:', r.status)
+            return r.ok ? r.json() : null
+          })
+          .catch(e => {
+            console.error('Error loading sections.json:', e)
+            return null
+          }),
+        fetch('/content/gallery.json', { cache: 'no-store' })
+          .then(r => {
+            console.log('gallery.json:', r.status)
+            return r.ok ? r.json() : null
+          })
+          .catch(e => {
+            console.error('Error loading gallery.json:', e)
+            return null
+          }),
       ])
+
+      console.log('All content loaded:', { hero, highlights, statsJson, programs, principal, notif, evt, testimonials, sections, gallery })
 
       setHeroData(hero)
       setHighlightsData(highlights)
@@ -174,6 +256,7 @@ export default function Home() {
       setLoading(false)
     }
   }
+
 
   // Auto-advance hero slider
   useEffect(() => {
