@@ -4,99 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
-    <title>Bibi Rajni School - Admin Panel</title>
-    <link rel="icon" href="/favicon.ico" />
+    <title>Netlify CMS</title>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      html,
-      body {
-        height: 100%;
-        width: 100%;
-      }
-
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0f766e 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-      }
-
-      .loading-container {
-        text-align: center;
-        color: white;
-        z-index: 9999;
-      }
-
-      .spinner {
-        width: 60px;
-        height: 60px;
-        border: 5px solid rgba(255, 255, 255, 0.3);
-        border-top: 5px solid white;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 25px;
-      }
-
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      .loading-text {
-        font-size: 22px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-      }
-
-      .loading-subtext {
-        font-size: 14px;
-        font-weight: 400;
-        margin-top: 15px;
-        opacity: 0.9;
-      }
-    </style>
   </head>
   <body>
-    <div class="loading-container">
-      <div class="spinner"></div>
-      <div class="loading-text">Loading Admin Panel</div>
-      <div class="loading-subtext">Content Management System</div>
-    </div>
-
-    <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
-
-    <script>
-      // Handle authentication
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on('init', (user) => {
-          if (!user) {
-            window.netlifyIdentity.on('login', () => {
-              document.location.href = '/admin/'
-            })
-          }
-        })
-      }
-
-      // Remove loading on CMS load
-      window.addEventListener('load', () => {
-        setTimeout(() => {
-          const loader = document.querySelector('.loading-container')
-          if (loader) {
-            loader.style.display = 'none'
-          }
-        }, 1500)
-      })
-
-      console.log('Admin panel initialized successfully')
-    </script>
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   </body>
 </html>

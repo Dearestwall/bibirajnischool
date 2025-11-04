@@ -6,10 +6,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const [notifications, setNotifications] = useState<Array<{ id: string; text: string; icon: string }>>([])
-  const [currentNotification, setCurrentNotification] = useState(0)
+  const [announcements, setAnnouncements] = useState<Array<{ id: string; text: string; icon: string }>>([])
+  const [mounted, setMounted] = useState(false)
 
-  // Handle scroll effect for header background
+  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
@@ -18,31 +18,25 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Load notifications from CMS
+  // Load announcements from CMS
   useEffect(() => {
-    fetch('/content/home/notifications.json')
-      .then(r => r.ok ? r.json() : null)
-      .then(data => {
-        if (data?.items) setNotifications(data.items)
+    setMounted(true)
+    
+    Promise.all([
+      fetch('/content/home/notifications.json').then(r => r.ok ? r.json() : null),
+      fetch('/content/home/events.json').then(r => r.ok ? r.json() : null),
+    ])
+      .then(([notif, evt]) => {
+        const combined = [
+          ...(notif?.items || []),
+          ...(evt?.items?.map((e: any) => ({ ...e, icon: e.icon || '📅' })) || [])
+        ]
+        setAnnouncements(combined.length > 0 ? combined : getDefaultAnnouncements())
       })
-      .catch(() => {
-        setNotifications([
-          { id: '1', text: 'Admissions Open for 2026-27', icon: '📢' },
-          { id: '2', text: 'Annual Sports Day - Nov 15', icon: '🏆' },
-        ])
-      })
+      .catch(() => setAnnouncements(getDefaultAnnouncements()))
   }, [])
 
-  // Rotate notifications
-  useEffect(() => {
-    if (notifications.length === 0) return
-    const timer = setInterval(() => {
-      setCurrentNotification((prev) => (prev + 1) % notifications.length)
-    }, 4000)
-    return () => clearInterval(timer)
-  }, [notifications])
-
-  // Toggle body scroll when menu is open
+  // Toggle body scroll
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden'
@@ -51,75 +45,64 @@ export default function Header() {
     }
   }, [isMenuOpen])
 
-  const navLinks = [
-    { href: '/#highlights', label: 'Highlights', icon: '⭐' },
-    { href: '/#programs', label: 'Programs', icon: '📚' },
+  const mainNavLinks = [
+    { href: '/', label: 'Home', icon: '🏠' },
     { href: '/about', label: 'About', icon: 'ℹ️' },
+    { href: '/academics', label: 'Academics', icon: '📚' },
     { href: '/admissions', label: 'Admissions', icon: '📝' },
     { href: '/contact', label: 'Contact', icon: '📧' },
   ]
 
+  const extraLinks = [
+    { href: '/achievements', label: 'Achievements', icon: '🏆' },
+    { href: '/activities', label: 'Activities', icon: '🎭' },
+    { href: '/gallery', label: 'Gallery', icon: '🖼️' },
+    { href: '/facilities', label: 'Facilities', icon: '🏢' },
+    { href: '/faculty', label: 'Faculty', icon: '👨‍🏫' },
+    { href: '/events', label: 'Events', icon: '📅' },
+    { href: '/notices', label: 'Notices', icon: '📌' },
+    { href: '/rules', label: 'Rules', icon: '📖' },
+    { href: '/staff', label: 'Staff', icon: '👥' },
+    
+  ]
+
   const socialLinks = [
-    { icon: '📘', href: '#', label: 'Facebook' },
-    { icon: '🐦', href: '#', label: 'Twitter' },
+   
+    
     { icon: '📷', href: '#', label: 'Instagram' },
     { icon: '▶️', href: '#', label: 'YouTube' },
   ]
 
+  if (!mounted) return null
+
   return (
     <>
-      {/* TOP NOTIFICATION BAR */}
-      <AnimatePresence>
-        {notifications.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 text-white overflow-hidden shadow-lg"
-          >
-            <div className="wrap h-10 flex items-center justify-between gap-4">
-              <motion.div
-                className="flex items-center gap-2 min-w-0 flex-1"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <span className="text-lg font-bold animate-bounce">📢</span>
-                <div className="overflow-hidden flex-1">
-                  <motion.div
-                    key={currentNotification}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.5 }}
-                    className="whitespace-nowrap text-sm font-medium"
-                  >
-                    {notifications[currentNotification]?.icon}{' '}
-                    {notifications[currentNotification]?.text}
-                  </motion.div>
-                </div>
-              </motion.div>
-              <div className="flex gap-1 text-xs">
-                {notifications.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentNotification(idx)}
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      idx === currentNotification ? 'bg-white w-4' : 'bg-white/50'
-                    }`}
-                    aria-label={`Go to notification ${idx + 1}`}
-                  />
-                ))}
-              </div>
-              <Link
-                href="/contact"
-                className="text-xs font-bold hover:underline whitespace-nowrap hidden sm:inline"
-              >
-                Learn More →
-              </Link>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* CONTINUOUS SCROLLING ANNOUNCEMENTS */}
+      <div className="bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 text-white overflow-hidden shadow-lg py-2">
+        <div className="flex items-center gap-3">
+          <span className="text-lg font-bold animate-bounce whitespace-nowrap pl-4">📢</span>
+          <div className="overflow-hidden flex-1">
+            <motion.div
+              animate={{ x: ['0%', '-100%'] }}
+              transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+              className="flex gap-8 whitespace-nowrap"
+            >
+              {/* First set */}
+              {announcements.map((item) => (
+                <span key={`${item.id}-1`} className="text-sm font-medium">
+                  {item.icon} {item.text}
+                </span>
+              ))}
+              {/* Duplicate for seamless loop */}
+              {announcements.map((item) => (
+                <span key={`${item.id}-2`} className="text-sm font-medium">
+                  {item.icon} {item.text}
+                </span>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+      </div>
 
       {/* MAIN HEADER */}
       <header
@@ -130,16 +113,10 @@ export default function Header() {
         }`}
       >
         <div className="wrap">
-          {/* Header Content */}
           <div className="flex items-center justify-between h-20">
-            {/* LOGO SECTION */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex-shrink-0"
-            >
+            {/* LOGO */}
+            <motion.div whileHover={{ scale: 1.05 }} className="flex-shrink-0">
               <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
-                {/* 3D Rotating Logo */}
                 <motion.div
                   whileHover={{ rotateY: 360, scale: 1.1 }}
                   transition={{ duration: 0.8 }}
@@ -148,22 +125,11 @@ export default function Header() {
                 >
                   BR
                 </motion.div>
-
-                {/* Logo Text */}
                 <div className="hidden sm:block">
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="font-extrabold text-lg sm:text-xl text-gray-900 leading-tight"
-                  >
+                  <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="font-extrabold text-lg sm:text-xl text-gray-900 leading-tight">
                     Bibi Rajni
                   </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="text-xs sm:text-sm text-emerald-600 font-semibold"
-                  >
+                  <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className="text-xs sm:text-sm text-emerald-600 font-semibold">
                     Excellence in Education
                   </motion.div>
                 </div>
@@ -172,7 +138,7 @@ export default function Header() {
 
             {/* DESKTOP NAVIGATION */}
             <nav className="hidden lg:flex items-center gap-1">
-              {navLinks.map((link, idx) => (
+              {mainNavLinks.map((link, idx) => (
                 <motion.a
                   key={link.href}
                   href={link.href}
@@ -187,11 +153,47 @@ export default function Header() {
                   <span>{link.label}</span>
                 </motion.a>
               ))}
+
+              {/* DROPDOWN MENU FOR EXTRA LINKS */}
+              <div className="relative group">
+                <button className="px-4 py-2 text-gray-700 font-medium rounded-lg hover:bg-emerald-50 hover:text-emerald-600 transition-colors flex items-center gap-2">
+                  <span className="text-lg">⋯</span>
+                  <span>More</span>
+                  <motion.span animate={{ rotate: 180 }} transition={{ duration: 0.3 }} className="text-lg">
+                    ▼
+                  </motion.span>
+                </button>
+
+                {/* Dropdown Items */}
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden"
+                >
+                  <div className="p-2 max-h-96 overflow-y-auto">
+                    {extraLinks.map((link, idx) => (
+                      <motion.a
+                        key={link.href}
+                        href={link.href}
+                        className="flex items-center gap-3 px-4 py-3 text-gray-700 font-medium rounded-lg hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
+                        whileHover={{ x: 5 }}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: idx * 0.05 }}
+                      >
+                        <span className="text-lg">{link.icon}</span>
+                        <span>{link.label}</span>
+                      </motion.a>
+                    ))}
+                  </div>
+                </motion.div>
+              </div>
             </nav>
 
-            {/* RIGHT SECTION: CTA + MOBILE MENU */}
+            {/* RIGHT SECTION */}
             <div className="flex items-center gap-2 sm:gap-4">
-              {/* SOCIAL LINKS - DESKTOP */}
+              {/* SOCIAL - DESKTOP */}
               <div className="hidden md:flex items-center gap-2">
                 {socialLinks.map((social) => (
                   <motion.a
@@ -207,7 +209,7 @@ export default function Header() {
                 ))}
               </div>
 
-              {/* CTA BUTTON - DESKTOP */}
+              {/* CTA BUTTON */}
               <motion.a
                 href="/admissions"
                 className="hidden sm:inline-flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
@@ -224,39 +226,18 @@ export default function Header() {
                 className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
                 whileTap={{ scale: 0.9 }}
               >
-                <motion.div
-                  animate={isMenuOpen ? 'open' : 'closed'}
-                  className="w-6 h-6 relative flex flex-col items-center justify-center"
-                >
-                  <motion.span
-                    variants={{
-                      closed: { rotate: 0, y: 0 },
-                      open: { rotate: 45, y: 10 },
-                    }}
-                    className="w-6 h-0.5 bg-gray-800 absolute"
-                  />
-                  <motion.span
-                    variants={{
-                      closed: { opacity: 1 },
-                      open: { opacity: 0 },
-                    }}
-                    className="w-6 h-0.5 bg-gray-800"
-                  />
-                  <motion.span
-                    variants={{
-                      closed: { rotate: 0, y: 0 },
-                      open: { rotate: -45, y: -10 },
-                    }}
-                    className="w-6 h-0.5 bg-gray-800 absolute"
-                  />
+                <motion.div animate={isMenuOpen ? 'open' : 'closed'} className="w-6 h-6 relative flex flex-col items-center justify-center">
+                  <motion.span variants={{ closed: { rotate: 0, y: 0 }, open: { rotate: 45, y: 10 } }} className="w-6 h-0.5 bg-gray-800 absolute" />
+                  <motion.span variants={{ closed: { opacity: 1 }, open: { opacity: 0 } }} className="w-6 h-0.5 bg-gray-800" />
+                  <motion.span variants={{ closed: { rotate: 0, y: 0 }, open: { rotate: -45, y: -10 } }} className="w-6 h-0.5 bg-gray-800 absolute" />
                 </motion.div>
               </motion.button>
             </div>
           </div>
 
-          {/* TABLET NAVIGATION - visible on md but not lg */}
+          {/* TABLET NAVIGATION */}
           <nav className="hidden md:flex lg:hidden justify-center gap-2 pb-4 flex-wrap">
-            {navLinks.map((link) => (
+            {mainNavLinks.map((link) => (
               <motion.a
                 key={link.href}
                 href={link.href}
@@ -271,11 +252,10 @@ export default function Header() {
         </div>
       </header>
 
-      {/* MOBILE MENU OVERLAY */}
+      {/* MOBILE MENU */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -284,7 +264,6 @@ export default function Header() {
               onClick={() => setIsMenuOpen(false)}
             />
 
-            {/* Slide-out Menu */}
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: '0%' }}
@@ -296,18 +275,14 @@ export default function Header() {
               {/* Close Button */}
               <div className="sticky top-0 bg-white border-b p-4 flex justify-between items-center">
                 <h3 className="font-bold text-lg text-gray-900">Menu</h3>
-                <motion.button
-                  onClick={() => setIsMenuOpen(false)}
-                  whileTap={{ scale: 0.9 }}
-                  className="p-2 hover:bg-gray-100 rounded-lg"
-                >
+                <motion.button onClick={() => setIsMenuOpen(false)} whileTap={{ scale: 0.9 }} className="p-2 hover:bg-gray-100 rounded-lg">
                   ✕
                 </motion.button>
               </div>
 
-              {/* Navigation Links */}
+              {/* Main Links */}
               <nav className="p-4 space-y-2">
-                {navLinks.map((link, idx) => (
+                {mainNavLinks.map((link, idx) => (
                   <motion.a
                     key={link.href}
                     href={link.href}
@@ -326,8 +301,29 @@ export default function Header() {
               {/* Divider */}
               <div className="h-px bg-gray-200 mx-4" />
 
-              {/* Mobile CTA */}
+              {/* Extra Links Section */}
               <div className="p-4">
+                <p className="text-sm font-bold text-gray-600 mb-3">More Options</p>
+                <div className="space-y-2">
+                  {extraLinks.map((link, idx) => (
+                    <motion.a
+                      key={link.href}
+                      href={link.href}
+                      className="flex items-center gap-3 px-4 py-2 text-gray-700 font-medium rounded-lg hover:bg-emerald-50 hover:text-emerald-600 transition-colors text-sm"
+                      onClick={() => setIsMenuOpen(false)}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.03 }}
+                    >
+                      <span className="text-lg">{link.icon}</span>
+                      <span>{link.label}</span>
+                    </motion.a>
+                  ))}
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className="p-4 border-t">
                 <motion.a
                   href="/admissions"
                   className="block w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-lg text-center hover:shadow-lg transition-shadow"
@@ -338,7 +334,7 @@ export default function Header() {
                 </motion.a>
               </div>
 
-              {/* Social Links - Mobile */}
+              {/* Social */}
               <div className="p-4 border-t">
                 <p className="text-sm font-semibold text-gray-600 mb-3">Follow Us</p>
                 <div className="flex gap-2 flex-wrap">
@@ -356,61 +352,25 @@ export default function Header() {
                 </div>
               </div>
 
-              {/* Footer Info - Mobile */}
+              {/* Footer Info */}
               <div className="p-4 border-t text-xs text-gray-600 space-y-2">
-                <p>
-                  <span className="font-semibold">📞 Phone:</span> +91 123 456 7890
-                </p>
-                <p>
-                  <span className="font-semibold">✉️ Email:</span> info@bibirajnischool.edu
-                </p>
-                <p>
-                  <span className="font-semibold">📍 Address:</span> Tarn Taran, Punjab
-                </p>
+                <p><span className="font-semibold">📞 Phone:</span> +91 123 456 7890</p>
+                <p><span className="font-semibold">✉️ Email:</span> info@bibirajnischool.edu</p>
+                <p><span className="font-semibold">📍 Address:</span> Tarn Taran, Punjab</p>
               </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
-
-      {/* SCROLL TO TOP BUTTON */}
-      <ScrollToTopButton />
     </>
   )
 }
 
-// Scroll to Top Button Component
-function ScrollToTopButton() {
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsVisible(window.scrollY > 400)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.button
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0 }}
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-40 p-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-full shadow-xl hover:shadow-2xl transition-shadow"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          title="Scroll to top"
-        >
-          ↑
-        </motion.button>
-      )}
-    </AnimatePresence>
-  )
+function getDefaultAnnouncements() {
+  return [
+    { id: '1', text: 'Admissions Open for 2026-27', icon: '📢' },
+    { id: '2', text: 'Annual Sports Day - Nov 15', icon: '🏆' },
+    { id: '3', text: 'Parent-Teacher Meeting - Nov 20', icon: '👥' },
+    { id: '4', text: 'Science Exhibition Coming Soon', icon: '🔬' },
+  ]
 }

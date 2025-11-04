@@ -1,14 +1,7 @@
 backend:
   name: git-gateway
   branch: main
-  identity_url: 'https://bibirajnischool.netlify.app/identity'
-  gitgateway_url: 'https://api.netlify.com/auth/github'
-  commit_messages:
-    create: 'Create {{collection}} "{{slug}}"'
-    update: 'Update {{collection}} "{{slug}}"'
-    delete: 'Delete {{collection}} "{{slug}}"'
-    uploadMedia: '[skip ci] Upload "{{path}}"'
-    deleteMedia: '[skip ci] Delete "{{path}}"'
+  auth_endpoint: '.netlify/functions/auth'
 
 media_folder: 'public/images'
 public_folder: '/images'
@@ -22,7 +15,7 @@ collections:
   - name: 'home'
     label: '🏠 Homepage'
     editor:
-      preview: true
+      preview: false
     files:
       - name: 'hero'
         label: 'Hero Section'
@@ -140,7 +133,7 @@ collections:
               - label: 'Number'
                 name: 'value'
                 widget: 'number'
-                valueType: 'int'
+                value_type: 'int'
               - label: 'Suffix'
                 name: 'suffix'
                 widget: 'string'
