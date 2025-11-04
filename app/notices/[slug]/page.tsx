@@ -1,52 +1,52 @@
-import { readMarkdown } from '@/lib/content'
-import { marked } from 'marked'
-import fs from 'node:fs'
-import path from 'node:path'
+'use client'
 
-export const dynamicParams = false
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
 
-export function generateStaticParams() {
-  const dir = path.join(process.cwd(), 'content/notices')
-  if (!fs.existsSync(dir)) return []
-  
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md'))
-  return files.map((f) => ({
-    slug: f.replace(/\.md$/, ''),
-  }))
+interface Notice {
+  id: string
+  title: string
+  date: string
+  description: string
+  icon?: string
 }
 
-export default async function NoticePage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params
-  const { data, content } = readMarkdown(`content/notices/${slug}.md`)
-  
+export default function NoticeDetail({ params }: { params: { slug: string } }) {
+  const [notice, setNotice] = useState<Notice | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Load from static data
+    const noticeData: Record<string, Notice> = {
+      'winter-break-2025': {
+        id: '1',
+        title: 'Winter Break Announcement',
+        date: 'October 2025',
+        description: 'School will remain closed from December 20 to January 5 for winter break.',
+        icon: '❄️',
+      },
+      // Add more notices as needed
+    }
+
+    setNotice(noticeData[params.slug] || null)
+    setLoading(false)
+  }, [params.slug])
+
+  if (loading) return <div className="h-screen bg-gradient-to-br from-emerald-50 to-teal-50" />
+  if (!notice) return <div className="text-center py-20">Notice not found</div>
+
   return (
-    <section className="wrap section">
-      <h1 className="text-4xl font-bold text-gray-900">{data.title}</h1>
-      <p className="text-sm text-gray-500 mt-3">
-        {new Date(data.date).toLocaleDateString('en-IN', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })}
-      </p>
-      {data.file && (
-        <a
-          href={data.file}
-          target="_blank"
-          rel="noreferrer"
-          className="btn mt-6 inline-flex"
-        >
-          Download Attachment
-        </a>
-      )}
-      <article
-        className="prose max-w-none mt-8"
-        dangerouslySetInnerHTML={{ __html: marked.parse(content) as string }}
-      />
-    </section>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="section">
+      <div className="wrap max-w-2xl mx-auto">
+        <Link href="/notices" className="text-emerald-600 hover:text-emerald-700 mb-6 inline-block">
+          ← Back to Notices
+        </Link>
+        {notice.icon && <div className="text-5xl mb-4">{notice.icon}</div>}
+        <h1 className="text-4xl font-bold mb-2">{notice.title}</h1>
+        <p className="text-gray-600 mb-6">{notice.date}</p>
+        <p className="text-lg text-gray-700 leading-relaxed">{notice.description}</p>
+      </div>
+    </motion.div>
   )
 }

@@ -8,9 +8,6 @@ const nextConfig = {
       { protocol: 'http', hostname: 'localhost' },
     ],
   },
-  typescript: {
-    ignoreBuildErrors: false,
-  },
 }
 
 module.exports = nextConfig

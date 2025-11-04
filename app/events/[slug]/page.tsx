@@ -1,58 +1,52 @@
-import { readMarkdown } from '@/lib/content'
-import { marked } from 'marked'
-import fs from 'node:fs'
-import path from 'node:path'
+'use client'
 
-export const dynamicParams = false
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
 
-export function generateStaticParams() {
-  const dir = path.join(process.cwd(), 'content/events')
-  if (!fs.existsSync(dir)) return []
-  
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md'))
-  return files.map((f) => ({
-    slug: f.replace(/\.md$/, ''),
-  }))
+interface EventDetail {
+  id: string
+  title: string
+  date: string
+  description: string
+  icon: string
 }
 
-export default async function EventPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params
-  const { data, content } = readMarkdown(`content/events/${slug}.md`)
-  
+export default function EventDetail({ params }: { params: { slug: string } }) {
+  const [event, setEvent] = useState<EventDetail | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Load from static JSON in public folder
+    const eventData: Record<string, EventDetail> = {
+      'sports-day-2025': {
+        id: '1',
+        title: 'Annual Sports Day',
+        date: 'November 15, 2025',
+        description: 'Join us for our annual sports day celebration!',
+        icon: '🏆',
+      },
+      // Add more events as needed
+    }
+
+    setEvent(eventData[params.slug] || null)
+    setLoading(false)
+  }, [params.slug])
+
+  if (loading) return <div className="h-screen bg-gradient-to-br from-emerald-50 to-teal-50" />
+  if (!event) return <div className="text-center py-20">Event not found</div>
+
   return (
-    <section className="wrap section">
-      {data.cover && (
-        <img
-          className="w-full h-64 md:h-96 object-cover rounded-2xl"
-          src={data.cover}
-          alt={data.title}
-        />
-      )}
-      <h1 className="text-4xl font-bold text-gray-900 mt-8">{data.title}</h1>
-      <div className="mt-4 text-gray-600">
-        <p>
-          {new Date(data.start).toLocaleDateString('en-IN', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
-          {data.end &&
-            ` - ${new Date(data.end).toLocaleDateString('en-IN', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })}`}
-        </p>
-        {data.location && <p className="mt-1">📍 {data.location}</p>}
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="section">
+      <div className="wrap max-w-2xl mx-auto">
+        <Link href="/events" className="text-emerald-600 hover:text-emerald-700 mb-6 inline-block">
+          ← Back to Events
+        </Link>
+        <div className="text-5xl mb-4">{event.icon}</div>
+        <h1 className="text-4xl font-bold mb-2">{event.title}</h1>
+        <p className="text-gray-600 mb-6">{event.date}</p>
+        <p className="text-lg text-gray-700 leading-relaxed">{event.description}</p>
       </div>
-      <article
-        className="prose max-w-none mt-8"
-        dangerouslySetInnerHTML={{ __html: marked.parse(content) as string }}
-      />
-    </section>
+    </motion.div>
   )
 }
