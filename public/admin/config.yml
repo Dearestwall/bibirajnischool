@@ -17,7 +17,7 @@ show_preview_links: true
 logo_url: 'https://via.placeholder.com/80x80?text=BR+School'
 
 collections:
-  # HOMEPAGE
+  # HOME - Single collection with multiple files
   - name: 'home'
     label: '🏠 Homepage'
     editor:
@@ -26,7 +26,6 @@ collections:
       - name: 'hero'
         label: 'Hero Section'
         file: 'content/home/hero.json'
-        description: 'Hero banner with slider'
         fields:
           - label: 'Title'
             name: 'title'
@@ -59,7 +58,6 @@ collections:
             name: 'slides'
             widget: 'list'
             allow_add: true
-            collapsed: true
             fields:
               - label: 'Image'
                 name: 'image'
@@ -76,7 +74,6 @@ collections:
             name: 'cards'
             widget: 'list'
             allow_add: true
-            collapsed: true
             fields:
               - label: 'Icon'
                 name: 'icon'
@@ -126,7 +123,6 @@ collections:
             name: 'items'
             widget: 'list'
             allow_add: true
-            collapsed: true
             fields:
               - label: 'Number'
                 name: 'value'
@@ -151,7 +147,6 @@ collections:
             name: 'items'
             widget: 'list'
             allow_add: true
-            collapsed: true
             fields:
               - label: 'Icon'
                 name: 'icon'
@@ -171,7 +166,6 @@ collections:
             name: 'items'
             widget: 'list'
             allow_add: true
-            collapsed: true
             fields:
               - label: 'ID'
                 name: 'id'
@@ -191,7 +185,6 @@ collections:
             name: 'items'
             widget: 'list'
             allow_add: true
-            collapsed: true
             fields:
               - label: 'ID'
                 name: 'id'
@@ -217,7 +210,6 @@ collections:
             name: 'items'
             widget: 'list'
             allow_add: true
-            collapsed: true
             fields:
               - label: 'Name'
                 name: 'name'
@@ -267,7 +259,7 @@ collections:
                 name: 'linkText'
                 widget: 'string'
 
-  # PAGES
+  # PAGES - Single collection with multiple files
   - name: 'pages'
     label: '📄 Pages'
     files:
@@ -298,20 +290,6 @@ collections:
               - label: 'Description'
                 name: 'desc'
                 widget: 'text'
-          - label: 'Values'
-            name: 'values'
-            widget: 'list'
-            allow_add: true
-            fields:
-              - label: 'Icon'
-                name: 'icon'
-                widget: 'string'
-              - label: 'Title'
-                name: 'title'
-                widget: 'string'
-              - label: 'Description'
-                name: 'desc'
-                widget: 'text'
 
       - name: 'admissions'
         label: 'Admissions'
@@ -326,23 +304,6 @@ collections:
           - label: 'Content'
             name: 'content'
             widget: 'markdown'
-          - label: 'Process Steps'
-            name: 'process'
-            widget: 'list'
-            allow_add: true
-            fields:
-              - label: 'Step'
-                name: 'step'
-                widget: 'string'
-              - label: 'Title'
-                name: 'title'
-                widget: 'string'
-              - label: 'Description'
-                name: 'desc'
-                widget: 'text'
-              - label: 'Icon'
-                name: 'icon'
-                widget: 'string'
 
       - name: 'contact'
         label: 'Contact'
@@ -358,7 +319,7 @@ collections:
             name: 'message'
             widget: 'markdown'
 
-  # NEWS & NOTICES
+  # NEWS - Folder collection
   - name: 'news'
     label: '📰 News & Notices'
     folder: 'content/news'
@@ -386,7 +347,7 @@ collections:
         widget: 'image'
         required: false
 
-  # GALLERY
+  # GALLERY - Folder collection
   - name: 'gallery'
     label: '🖼️ Gallery'
     folder: 'content/gallery'
