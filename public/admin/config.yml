@@ -1,65 +1,85 @@
 backend:
   name: git-gateway
   branch: main
-  # Disable editorial workflow to publish directly
   auth_type: implicit
+  commit_messages:
+    create: 'Create {{collection}} "{{slug}}"'
+    update: 'Update {{collection}} "{{slug}}"'
+    delete: 'Delete {{collection}} "{{slug}}"'
+    uploadMedia: '[skip ci] Upload "{{path}}"'
+    deleteMedia: '[skip ci] Delete "{{path}}"'
 
 media_folder: 'public/images'
 public_folder: '/images'
-# REMOVE: publish_mode: editorial_workflow
 site_url: 'https://bibirajnischool.netlify.app/'
 display_url: 'https://bibirajnischool.netlify.app/'
 show_preview_links: true
 logo_url: 'https://via.placeholder.com/80x80?text=BR+School'
 
-# ... rest of collections config
+# Disable editorial workflow - publish directly to main
+# publish_mode: editorial_workflow
 
 collections:
-  # HOME - Single collection with multiple files
+  # HOME CONTENT
   - name: 'home'
     label: '🏠 Homepage'
+    description: 'Homepage content and sections'
     editor:
       preview: false
     files:
       - name: 'hero'
         label: 'Hero Section'
         file: 'content/home/hero.json'
+        description: 'Hero banner with image slider'
         fields:
           - label: 'Title'
             name: 'title'
             widget: 'string'
             default: 'Welcome to Bibi Rajni School'
+
           - label: 'Subtitle'
             name: 'subtitle'
             widget: 'string'
             default: 'Excellence in Education Since 1990'
+
           - label: 'Description'
             name: 'description'
             widget: 'text'
+            default: 'Where excellence meets compassion.'
+
           - label: 'CTA 1 Text'
             name: 'cta1Text'
             widget: 'string'
             default: 'Apply Now'
+
           - label: 'CTA 1 Link'
             name: 'cta1Link'
             widget: 'string'
             default: '/admissions'
+
           - label: 'CTA 2 Text'
             name: 'cta2Text'
             widget: 'string'
             default: 'Explore'
+
           - label: 'CTA 2 Link'
             name: 'cta2Link'
             widget: 'string'
             default: '#programs'
+
           - label: 'Slides'
             name: 'slides'
             widget: 'list'
             allow_add: true
+            collapsed: false
             fields:
               - label: 'Image'
                 name: 'image'
                 widget: 'image'
+                media_library:
+                  config:
+                    multiple: false
+
               - label: 'Caption'
                 name: 'caption'
                 widget: 'string'
@@ -67,21 +87,27 @@ collections:
       - name: 'highlights'
         label: 'Highlights'
         file: 'content/home/highlights.json'
+        description: '4 highlight cards'
         fields:
           - label: 'Cards'
             name: 'cards'
             widget: 'list'
             allow_add: true
+            collapsed: false
             fields:
               - label: 'Icon'
                 name: 'icon'
                 widget: 'string'
+                default: '🎓'
+
               - label: 'Title'
                 name: 'title'
                 widget: 'string'
+
               - label: 'Description'
                 name: 'description'
                 widget: 'text'
+
               - label: 'Color'
                 name: 'color'
                 widget: 'select'
@@ -91,284 +117,428 @@ collections:
                   - { label: '🌸 Pink', value: 'from-pink-500 to-pink-600' }
                   - { label: '🟢 Green', value: 'from-green-500 to-green-600' }
                   - { label: '🟠 Orange', value: 'from-orange-500 to-orange-600' }
+                  - { label: '🔴 Red', value: 'from-red-500 to-red-600' }
 
       - name: 'principal'
-        label: "Principal's Desk"
+        label: "👨‍💼 Principal's Desk"
         file: 'content/home/principal.json'
+        description: "Message from Principal"
         fields:
           - label: 'Section Title'
             name: 'title'
             widget: 'string'
+            default: "From the Principal's Desk"
+
           - label: 'Message'
             name: 'message'
             widget: 'markdown'
+            default: 'Dear Parents and Students...'
+
           - label: 'Principal Name'
             name: 'name'
             widget: 'string'
+
           - label: 'Position'
             name: 'position'
             widget: 'string'
+            default: 'Principal'
+
           - label: 'Photo'
             name: 'image'
             widget: 'image'
             required: false
 
       - name: 'stats'
-        label: 'Statistics'
+        label: '📊 Statistics'
         file: 'content/home/stats.json'
+        description: 'Key statistics and numbers'
         fields:
-          - label: 'Stats'
+          - label: 'Stats Items'
             name: 'items'
             widget: 'list'
             allow_add: true
+            collapsed: false
             fields:
-              - label: 'Number'
+              - label: 'Value'
                 name: 'value'
                 widget: 'number'
                 value_type: 'int'
+
               - label: 'Suffix'
                 name: 'suffix'
                 widget: 'string'
                 default: '+'
+
               - label: 'Label'
                 name: 'label'
                 widget: 'string'
 
       - name: 'programs'
-        label: 'Programs'
+        label: '📚 Programs'
         file: 'content/home/programs.json'
+        description: 'Why Choose Bibi Rajni'
         fields:
           - label: 'Section Title'
             name: 'title'
             widget: 'string'
-          - label: 'Programs'
+            default: 'Why Choose Bibi Rajni?'
+
+          - label: 'Program Items'
             name: 'items'
             widget: 'list'
             allow_add: true
+            collapsed: false
             fields:
               - label: 'Icon'
                 name: 'icon'
                 widget: 'string'
+
               - label: 'Title'
                 name: 'title'
                 widget: 'string'
+
               - label: 'Description'
                 name: 'desc'
                 widget: 'text'
 
       - name: 'notifications'
-        label: 'Notifications'
+        label: '📢 Notifications'
         file: 'content/home/notifications.json'
+        description: 'Scrolling announcements'
         fields:
-          - label: 'Notifications'
+          - label: 'Notification Items'
             name: 'items'
             widget: 'list'
             allow_add: true
+            collapsed: false
             fields:
               - label: 'ID'
                 name: 'id'
                 widget: 'string'
+
               - label: 'Text'
                 name: 'text'
                 widget: 'string'
+
               - label: 'Icon'
                 name: 'icon'
                 widget: 'string'
+                default: '📢'
 
       - name: 'events'
-        label: 'Events'
+        label: '🎯 Events'
         file: 'content/home/events.json'
+        description: 'Upcoming events'
         fields:
-          - label: 'Events'
+          - label: 'Event Items'
             name: 'items'
             widget: 'list'
             allow_add: true
+            collapsed: false
             fields:
               - label: 'ID'
                 name: 'id'
                 widget: 'string'
+
               - label: 'Title'
                 name: 'title'
                 widget: 'string'
+
               - label: 'Date'
                 name: 'date'
                 widget: 'string'
+                default: 'TBD'
+
               - label: 'Icon'
                 name: 'icon'
                 widget: 'string'
 
       - name: 'testimonials'
-        label: 'Testimonials'
+        label: '💬 Testimonials'
         file: 'content/home/testimonials.json'
+        description: 'Parent testimonials'
         fields:
           - label: 'Section Title'
             name: 'title'
             widget: 'string'
-          - label: 'Testimonials'
+            default: 'What Parents Say'
+
+          - label: 'Testimonial Items'
             name: 'items'
             widget: 'list'
             allow_add: true
+            collapsed: false
             fields:
               - label: 'Name'
                 name: 'name'
                 widget: 'string'
+
               - label: 'Role'
                 name: 'role'
                 widget: 'string'
+                default: 'Parent'
+
               - label: 'Message'
                 name: 'message'
                 widget: 'markdown'
+
               - label: 'Photo'
                 name: 'image'
                 widget: 'image'
                 required: false
 
       - name: 'sections'
-        label: 'Home Sections'
+        label: '🏢 Home Sections'
         file: 'content/home/sections.json'
+        description: 'Additional home sections'
         fields:
-          - label: 'Sections'
+          - label: 'Section Items'
             name: 'items'
             widget: 'list'
             allow_add: true
+            collapsed: false
             fields:
               - label: 'ID'
                 name: 'id'
                 widget: 'string'
+                hint: 'Unique identifier (e.g., contact, facilities)'
+
               - label: 'Title'
                 name: 'title'
                 widget: 'string'
+
               - label: 'Subtitle'
                 name: 'subtitle'
                 widget: 'string'
+
               - label: 'Icon'
                 name: 'icon'
                 widget: 'string'
+
               - label: 'Content'
                 name: 'content'
                 widget: 'markdown'
+
               - label: 'Image'
                 name: 'image'
                 widget: 'image'
+                required: false
+
               - label: 'Link'
                 name: 'link'
                 widget: 'string'
+                hint: 'e.g., /contact or /facilities'
+
               - label: 'Link Text'
                 name: 'linkText'
                 widget: 'string'
 
-  # PAGES - Single collection with multiple files
+  # PAGES
   - name: 'pages'
     label: '📄 Pages'
+    description: 'Static pages content'
     files:
       - name: 'about'
-        label: 'About'
+        label: 'About Page'
         file: 'content/pages/about.json'
         fields:
           - label: 'Title'
             name: 'title'
             widget: 'string'
+
           - label: 'Subtitle'
             name: 'subtitle'
             widget: 'string'
+
           - label: 'Story'
             name: 'story'
             widget: 'markdown'
+
           - label: 'Milestones'
             name: 'milestones'
             widget: 'list'
             allow_add: true
+            collapsed: false
             fields:
               - label: 'Year'
                 name: 'year'
                 widget: 'string'
+
               - label: 'Title'
                 name: 'title'
                 widget: 'string'
+
               - label: 'Description'
                 name: 'desc'
                 widget: 'text'
 
       - name: 'admissions'
-        label: 'Admissions'
+        label: 'Admissions Page'
         file: 'content/pages/admissions.json'
         fields:
           - label: 'Title'
             name: 'title'
             widget: 'string'
+
           - label: 'Subtitle'
             name: 'subtitle'
             widget: 'string'
+
           - label: 'Content'
             name: 'content'
             widget: 'markdown'
 
+          - label: 'Application Link'
+            name: 'applicationLink'
+            widget: 'string'
+            required: false
+
       - name: 'contact'
-        label: 'Contact'
+        label: 'Contact Page'
         file: 'content/pages/contact.json'
         fields:
           - label: 'Title'
             name: 'title'
             widget: 'string'
+
           - label: 'Subtitle'
             name: 'subtitle'
             widget: 'string'
+
           - label: 'Message'
             name: 'message'
             widget: 'markdown'
 
-  # NEWS - Folder collection
+          - label: 'Phone'
+            name: 'phone'
+            widget: 'string'
+            required: false
+
+          - label: 'Email'
+            name: 'email'
+            widget: 'string'
+            required: false
+
+          - label: 'Address'
+            name: 'address'
+            widget: 'string'
+            required: false
+
+      - name: 'facilities'
+        label: 'Facilities Page'
+        file: 'content/pages/facilities.json'
+        fields:
+          - label: 'Title'
+            name: 'title'
+            widget: 'string'
+
+          - label: 'Content'
+            name: 'content'
+            widget: 'markdown'
+
+          - label: 'Facilities List'
+            name: 'facilities'
+            widget: 'list'
+            allow_add: true
+            collapsed: false
+            fields:
+              - label: 'Icon'
+                name: 'icon'
+                widget: 'string'
+
+              - label: 'Name'
+                name: 'name'
+                widget: 'string'
+
+              - label: 'Description'
+                name: 'desc'
+                widget: 'text'
+
+  # NEWS & NOTICES
   - name: 'news'
     label: '📰 News & Notices'
+    description: 'Create news articles and notices'
     folder: 'content/news'
     create: true
     slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    identifier_field: 'title'
+    summary: '{{title}} - {{date}}'
     fields:
       - label: 'Title'
         name: 'title'
         widget: 'string'
+
       - label: 'Date'
         name: 'date'
         widget: 'datetime'
+        format: 'YYYY-MM-DD HH:mm'
+
       - label: 'Category'
         name: 'category'
         widget: 'select'
         options:
-          - { label: 'News', value: 'news' }
-          - { label: 'Notice', value: 'notice' }
-          - { label: 'Event', value: 'event' }
+          - { label: '📰 News', value: 'news' }
+          - { label: '📢 Notice', value: 'notice' }
+          - { label: '🎯 Event', value: 'event' }
+        default: 'news'
+
       - label: 'Content'
         name: 'body'
         widget: 'markdown'
+
       - label: 'Featured Image'
         name: 'image'
         widget: 'image'
         required: false
 
-  # GALLERY - Folder collection
+      - label: 'Summary'
+        name: 'summary'
+        widget: 'text'
+        required: false
+
+  # GALLERY
   - name: 'gallery'
     label: '🖼️ Gallery'
+    description: 'Upload and manage gallery images'
     folder: 'content/gallery'
     create: true
     slug: '{{slug}}'
+    identifier_field: 'title'
+    summary: '{{title}} - {{category}}'
     fields:
       - label: 'Title'
         name: 'title'
         widget: 'string'
+
       - label: 'Category'
         name: 'category'
         widget: 'select'
         options:
-          - { label: 'Events', value: 'Events' }
-          - { label: 'Sports', value: 'Sports' }
-          - { label: 'Campus', value: 'Campus' }
-          - { label: 'Activities', value: 'Activities' }
+          - { label: '🎉 Events', value: 'Events' }
+          - { label: '⚽ Sports', value: 'Sports' }
+          - { label: '🏫 Campus', value: 'Campus' }
+          - { label: '🎨 Activities', value: 'Activities' }
+          - { label: '🎭 Performances', value: 'Performances' }
+          - { label: '🏆 Achievements', value: 'Achievements' }
+        default: 'Events'
+
       - label: 'Date'
         name: 'date'
         widget: 'datetime'
+        format: 'YYYY-MM-DD'
+
       - label: 'Description'
         name: 'description'
         widget: 'text'
+
       - label: 'Image'
         name: 'image'
         widget: 'image'
+        media_library:
+          config:
+            multiple: false
+
+      - label: 'Author'
+        name: 'author'
+        widget: 'string'
+        required: false

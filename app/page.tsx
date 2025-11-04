@@ -133,45 +133,48 @@ export default function Home() {
   }, [])
 
   const loadContent = async () => {
-    try {
-      const [
-        hero,
-        highlights,
-        statsJson,
-        programs,
-        principal,
-        notif,
-        evt,
-        testimonials,
-        sections,
-        gallery,
-      ] = await Promise.all([
-        fetch('/content/home/hero.json').then(r => r.ok ? r.json() : null),
-        fetch('/content/home/highlights.json').then(r => r.ok ? r.json() : null),
-        fetch('/content/home/stats.json').then(r => r.ok ? r.json() : null),
-        fetch('/content/home/programs.json').then(r => r.ok ? r.json() : null),
-        fetch('/content/home/principal.json').then(r => r.ok ? r.json() : null),
-        fetch('/content/home/notifications.json').then(r => r.ok ? r.json() : null),
-        fetch('/content/home/events.json').then(r => r.ok ? r.json() : null),
-        fetch('/content/home/testimonials.json').then(r => r.ok ? r.json() : null),
-        fetch('/content/home/sections.json').then(r => r.ok ? r.json() : null),
-        fetch('/content/gallery.json').then(r => r.ok ? r.json() : null),
-      ])
+  try {
+    const baseUrl = typeof window !== 'undefined' ? '' : ''
+    
+    const [
+      hero,
+      highlights,
+      statsJson,
+      programs,
+      principal,
+      notif,
+      evt,
+      testimonials,
+      sections,
+      gallery,
+    ] = await Promise.all([
+      fetch('/content/home/hero.json').then(r => r.ok ? r.json() : null),
+      fetch('/content/home/highlights.json').then(r => r.ok ? r.json() : null),
+      fetch('/content/home/stats.json').then(r => r.ok ? r.json() : null),
+      fetch('/content/home/programs.json').then(r => r.ok ? r.json() : null),
+      fetch('/content/home/principal.json').then(r => r.ok ? r.json() : null),
+      fetch('/content/home/notifications.json').then(r => r.ok ? r.json() : null),
+      fetch('/content/home/events.json').then(r => r.ok ? r.json() : null),
+      fetch('/content/home/testimonials.json').then(r => r.ok ? r.json() : null),
+      fetch('/content/home/sections.json').then(r => r.ok ? r.json() : null),
+      fetch('/content/gallery.json').then(r => r.ok ? r.json() : null),
+    ])
 
-      setHeroData(hero || getDefaultHero())
-      setHighlightsData(highlights || getDefaultHighlights())
-      setStatsData(statsJson || getDefaultStats())
-      setProgramsData(programs || getDefaultPrograms())
-      setPrincipalData(principal || getDefaultPrincipal())
-      setTestimonials(testimonials || getDefaultTestimonials())
-      setHomeSections(sections?.items || getDefaultSections())
-      setGalleryItems(gallery?.items || getDefaultGallery())
-      setNotifications(notif?.items || [])
-      setEvents(evt?.items || [])
-    } catch (error) {
-      console.error('Error loading content:', error)
-    }
+    setHeroData(hero || getDefaultHero())
+    setHighlightsData(highlights || getDefaultHighlights())
+    setStatsData(statsJson || getDefaultStats())
+    setProgramsData(programs || getDefaultPrograms())
+    setPrincipalData(principal || getDefaultPrincipal())
+    setTestimonials(testimonials || getDefaultTestimonials())
+    setHomeSections(sections?.items || getDefaultSections())
+    setGalleryItems(gallery?.items || getDefaultGallery())
+    setNotifications(notif?.items || [])
+    setEvents(evt?.items || [])
+  } catch (error) {
+    console.error('Error loading content:', error)
   }
+}
+
 
   // Auto-advance hero slider
   useEffect(() => {
