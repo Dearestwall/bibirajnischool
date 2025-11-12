@@ -2,14 +2,14 @@
   "items": [
     {
       "role": "Parent",
-      "name": "Testing user",
-      "message": "just testing "
-    },
-    {
-      "role": "Parent",
       "name": "Arvind singh",
       "message": "nice school",
       "image": "/images/bibirajnijischool-logo.jpg"
+    },
+    {
+      "role": "Parent",
+      "name": "Testing user",
+      "message": "just testing "
     }
   ],
   "title": "Testing"
