@@ -3,7 +3,13 @@
     {
       "role": "Parent",
       "name": "Testing user",
-      "message": "just trstimg"
+      "message": "just testing "
+    },
+    {
+      "role": "Parent",
+      "name": "Arvind singh",
+      "message": "nice school",
+      "image": "/images/bibirajnijischool-logo.jpg"
     }
   ],
   "title": "Testing"
